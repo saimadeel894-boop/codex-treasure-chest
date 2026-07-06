@@ -81,7 +81,7 @@ function PropertyPage() {
           <section className="mt-8">
             <h2 className="text-xl font-bold text-slate-950">Features</h2>
             <ul className="mt-3 grid gap-2 sm:grid-cols-2">
-              {property.features.map((f) => (
+              {property.features.map((f: string) => (
                 <li key={f} className="flex items-center gap-2 text-sm text-slate-700">
                   <CheckCircle2 size={16} className="text-emerald-700" aria-hidden="true" />
                   {f}
@@ -93,7 +93,7 @@ function PropertyPage() {
           <section className="mt-8">
             <h2 className="text-xl font-bold text-slate-950">Inspection times</h2>
             <ul className="mt-3 space-y-2 text-slate-700">
-              {property.inspectionTimes.map((t) => (
+              {property.inspectionTimes.map((t: string) => (
                 <li key={t} className="rounded-md border border-slate-200 bg-white px-4 py-3">{t}</li>
               ))}
             </ul>

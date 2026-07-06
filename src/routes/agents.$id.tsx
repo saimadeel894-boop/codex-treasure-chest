@@ -61,7 +61,7 @@ function AgentPage() {
         <p className="mt-6 leading-7 text-slate-700">{agent.bio}</p>
         {agent.specialities?.length > 0 && (
           <div className="mt-4 flex flex-wrap gap-2">
-            {agent.specialities.map((s) => (
+            {agent.specialities.map((s: string) => (
               <span key={s} className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-800">{s}</span>
             ))}
           </div>
