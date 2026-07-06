@@ -9,38 +9,306 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SearchRouteImport } from './routes/search'
+import { Route as SavedPropertiesRouteImport } from './routes/saved-properties'
+import { Route as RegisterRouteImport } from './routes/register'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as ListPropertyRouteImport } from './routes/list-property'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as BlogRouteImport } from './routes/blog'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PropertiesIdRouteImport } from './routes/properties.$id'
+import { Route as EditPropertyIdRouteImport } from './routes/edit-property.$id'
+import { Route as BlogIdRouteImport } from './routes/blog.$id'
+import { Route as AgentsIdRouteImport } from './routes/agents.$id'
+import { Route as AgenciesIdRouteImport } from './routes/agencies.$id'
 
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SavedPropertiesRoute = SavedPropertiesRouteImport.update({
+  id: '/saved-properties',
+  path: '/saved-properties',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ListPropertyRoute = ListPropertyRouteImport.update({
+  id: '/list-property',
+  path: '/list-property',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PropertiesIdRoute = PropertiesIdRouteImport.update({
+  id: '/properties/$id',
+  path: '/properties/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EditPropertyIdRoute = EditPropertyIdRouteImport.update({
+  id: '/edit-property/$id',
+  path: '/edit-property/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogIdRoute = BlogIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => BlogRoute,
+} as any)
+const AgentsIdRoute = AgentsIdRouteImport.update({
+  id: '/agents/$id',
+  path: '/agents/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AgenciesIdRoute = AgenciesIdRouteImport.update({
+  id: '/agencies/$id',
+  path: '/agencies/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/blog': typeof BlogRouteWithChildren
+  '/contact': typeof ContactRoute
+  '/dashboard': typeof DashboardRoute
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/list-property': typeof ListPropertyRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/saved-properties': typeof SavedPropertiesRoute
+  '/search': typeof SearchRoute
+  '/agencies/$id': typeof AgenciesIdRoute
+  '/agents/$id': typeof AgentsIdRoute
+  '/blog/$id': typeof BlogIdRoute
+  '/edit-property/$id': typeof EditPropertyIdRoute
+  '/properties/$id': typeof PropertiesIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/blog': typeof BlogRouteWithChildren
+  '/contact': typeof ContactRoute
+  '/dashboard': typeof DashboardRoute
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/list-property': typeof ListPropertyRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/saved-properties': typeof SavedPropertiesRoute
+  '/search': typeof SearchRoute
+  '/agencies/$id': typeof AgenciesIdRoute
+  '/agents/$id': typeof AgentsIdRoute
+  '/blog/$id': typeof BlogIdRoute
+  '/edit-property/$id': typeof EditPropertyIdRoute
+  '/properties/$id': typeof PropertiesIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/blog': typeof BlogRouteWithChildren
+  '/contact': typeof ContactRoute
+  '/dashboard': typeof DashboardRoute
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/list-property': typeof ListPropertyRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/saved-properties': typeof SavedPropertiesRoute
+  '/search': typeof SearchRoute
+  '/agencies/$id': typeof AgenciesIdRoute
+  '/agents/$id': typeof AgentsIdRoute
+  '/blog/$id': typeof BlogIdRoute
+  '/edit-property/$id': typeof EditPropertyIdRoute
+  '/properties/$id': typeof PropertiesIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/blog'
+    | '/contact'
+    | '/dashboard'
+    | '/forgot-password'
+    | '/list-property'
+    | '/login'
+    | '/register'
+    | '/saved-properties'
+    | '/search'
+    | '/agencies/$id'
+    | '/agents/$id'
+    | '/blog/$id'
+    | '/edit-property/$id'
+    | '/properties/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/about'
+    | '/blog'
+    | '/contact'
+    | '/dashboard'
+    | '/forgot-password'
+    | '/list-property'
+    | '/login'
+    | '/register'
+    | '/saved-properties'
+    | '/search'
+    | '/agencies/$id'
+    | '/agents/$id'
+    | '/blog/$id'
+    | '/edit-property/$id'
+    | '/properties/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/blog'
+    | '/contact'
+    | '/dashboard'
+    | '/forgot-password'
+    | '/list-property'
+    | '/login'
+    | '/register'
+    | '/saved-properties'
+    | '/search'
+    | '/agencies/$id'
+    | '/agents/$id'
+    | '/blog/$id'
+    | '/edit-property/$id'
+    | '/properties/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  BlogRoute: typeof BlogRouteWithChildren
+  ContactRoute: typeof ContactRoute
+  DashboardRoute: typeof DashboardRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
+  ListPropertyRoute: typeof ListPropertyRoute
+  LoginRoute: typeof LoginRoute
+  RegisterRoute: typeof RegisterRoute
+  SavedPropertiesRoute: typeof SavedPropertiesRoute
+  SearchRoute: typeof SearchRoute
+  AgenciesIdRoute: typeof AgenciesIdRoute
+  AgentsIdRoute: typeof AgentsIdRoute
+  EditPropertyIdRoute: typeof EditPropertyIdRoute
+  PropertiesIdRoute: typeof PropertiesIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/saved-properties': {
+      id: '/saved-properties'
+      path: '/saved-properties'
+      fullPath: '/saved-properties'
+      preLoaderRoute: typeof SavedPropertiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/list-property': {
+      id: '/list-property'
+      path: '/list-property'
+      fullPath: '/list-property'
+      preLoaderRoute: typeof ListPropertyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +316,71 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/properties/$id': {
+      id: '/properties/$id'
+      path: '/properties/$id'
+      fullPath: '/properties/$id'
+      preLoaderRoute: typeof PropertiesIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/edit-property/$id': {
+      id: '/edit-property/$id'
+      path: '/edit-property/$id'
+      fullPath: '/edit-property/$id'
+      preLoaderRoute: typeof EditPropertyIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$id': {
+      id: '/blog/$id'
+      path: '/$id'
+      fullPath: '/blog/$id'
+      preLoaderRoute: typeof BlogIdRouteImport
+      parentRoute: typeof BlogRoute
+    }
+    '/agents/$id': {
+      id: '/agents/$id'
+      path: '/agents/$id'
+      fullPath: '/agents/$id'
+      preLoaderRoute: typeof AgentsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/agencies/$id': {
+      id: '/agencies/$id'
+      path: '/agencies/$id'
+      fullPath: '/agencies/$id'
+      preLoaderRoute: typeof AgenciesIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface BlogRouteChildren {
+  BlogIdRoute: typeof BlogIdRoute
+}
+
+const BlogRouteChildren: BlogRouteChildren = {
+  BlogIdRoute: BlogIdRoute,
+}
+
+const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  BlogRoute: BlogRouteWithChildren,
+  ContactRoute: ContactRoute,
+  DashboardRoute: DashboardRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
+  ListPropertyRoute: ListPropertyRoute,
+  LoginRoute: LoginRoute,
+  RegisterRoute: RegisterRoute,
+  SavedPropertiesRoute: SavedPropertiesRoute,
+  SearchRoute: SearchRoute,
+  AgenciesIdRoute: AgenciesIdRoute,
+  AgentsIdRoute: AgentsIdRoute,
+  EditPropertyIdRoute: EditPropertyIdRoute,
+  PropertiesIdRoute: PropertiesIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
