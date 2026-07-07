@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ArrowRight, Building2, MapPin, ShieldCheck, TrendingUp } from "lucide-react";
 
 import { Link } from "@/components/compat/Link";
+import heroPoster from "@/assets/hero-poster.jpg";
 import { AgentCard } from "@/components/AgentCard";
 import { PropertyCard } from "@/components/PropertyCard";
 import { SearchComponent } from "@/components/SearchComponent";
