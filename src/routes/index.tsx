@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ArrowRight, Building2, MapPin, ShieldCheck, TrendingUp } from "lucide-react";
-import { Image } from "@/components/compat/Image";
+
 import { Link } from "@/components/compat/Link";
 import { AgentCard } from "@/components/AgentCard";
 import { PropertyCard } from "@/components/PropertyCard";
@@ -51,35 +51,69 @@ function Home() {
 
   return (
     <>
-      <section className="relative isolate min-h-[620px] overflow-hidden bg-slate-950">
-        <Image
+      <section className="relative isolate min-h-[92vh] overflow-hidden bg-slate-950">
+        <video
+          className="absolute inset-0 h-full w-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          poster="https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=2200&q=80"
+          aria-hidden="true"
+        >
+          <source
+            src="https://cdn.coverr.co/videos/coverr-a-luxury-house-with-a-pool-2633/1080p.mp4"
+            type="video/mp4"
+          />
+          <source
+            src="https://cdn.coverr.co/videos/coverr-aerial-view-of-a-modern-neighborhood-8801/1080p.mp4"
+            type="video/mp4"
+          />
+        </video>
+        <img
           src="https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=2200&q=80"
-          alt="Modern Australian home exterior"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover"
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover -z-10"
         />
-        <div className="absolute inset-0 bg-slate-950/55" />
-        <div className="relative mx-auto flex min-h-[620px] max-w-7xl flex-col justify-center px-4 py-16 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <p className="mb-4 inline-flex rounded-md bg-white/15 px-3 py-1.5 text-sm font-bold text-white backdrop-blur">
-              Buy, rent, sell and discover property across Australia
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/70 via-slate-950/50 to-slate-950/80" />
+
+        <div className="relative mx-auto flex min-h-[92vh] max-w-7xl flex-col items-center justify-center px-4 py-24 text-center sm:px-6 lg:px-8">
+          <div className="animate-[fadeInUp_0.9s_ease-out_both] max-w-4xl">
+            <p className="mb-5 inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-white backdrop-blur-md">
+              Premium Australian Property Marketplace
             </p>
-            <h1 className="max-w-3xl text-4xl font-bold leading-tight text-white sm:text-6xl">
-              Find your next Australian address with confidence.
+            <h1 className="text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-7xl">
+              Find Your Perfect Home <span className="bg-gradient-to-r from-emerald-300 to-teal-200 bg-clip-text text-transparent">Across Australia</span>
             </h1>
-            <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-100">
-              Search premium homes, rentals, agencies, and local market opportunities in a polished
-              marketplace experience built for modern buyers and sellers.
+            <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-slate-100/90 sm:text-lg">
+              Discover homes, apartments, and investment properties from trusted agents across Australia.
             </p>
+            <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <Link
+                href="/search"
+                className="group inline-flex items-center gap-2 rounded-full bg-emerald-600 px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-emerald-900/40 transition hover:-translate-y-0.5 hover:bg-emerald-500 hover:shadow-emerald-900/60"
+              >
+                Browse Properties
+                <ArrowRight size={17} className="transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+              </Link>
+              <Link
+                href="/list-property"
+                className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md transition hover:-translate-y-0.5 hover:bg-white/20"
+              >
+                List Your Property
+              </Link>
+            </div>
           </div>
 
-          <div className="mt-9 max-w-5xl">
-            <SearchComponent />
+          <div className="mt-12 w-full max-w-5xl animate-[fadeInUp_1.1s_ease-out_0.15s_both] [animation:fadeInUp_1.1s_ease-out_0.15s_both,floaty_6s_ease-in-out_2s_infinite]">
+            <div className="rounded-2xl border border-white/25 bg-white/15 p-2 shadow-2xl shadow-slate-950/40 backdrop-blur-xl">
+              <SearchComponent />
+            </div>
           </div>
 
-          <div className="mt-8 grid max-w-3xl gap-3 text-white sm:grid-cols-3">
+          <div className="mt-12 grid w-full max-w-3xl gap-6 text-white sm:grid-cols-3">
             <div>
               <p className="text-3xl font-bold">38k+</p>
               <p className="text-sm text-slate-200">Australian listings</p>
