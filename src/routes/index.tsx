@@ -94,6 +94,7 @@ function Home() {
   }, [inView, videoLoaded]);
 
   // After sources are in the DOM, load and play; pause when offscreen.
+  // Retries up to 3 times with backoff if play() rejects or stalls.
   useEffect(() => {
     const video = videoRef.current;
     if (!video || !videoLoaded) return;
@@ -103,23 +104,65 @@ function Home() {
       return;
     }
 
-    video.preload = "auto";
-    video.load();
+    const MAX_ATTEMPTS = 3;
+    let attempt = 0;
+    let stallTimer: ReturnType<typeof setTimeout> | null = null;
+    let retryTimer: ReturnType<typeof setTimeout> | null = null;
+    let cancelled = false;
 
-    const timer = setTimeout(() => {
-      if (video.readyState < 3 || video.paused) setVideoFailed(true);
-    }, 4000);
+    const clearTimers = () => {
+      if (stallTimer) clearTimeout(stallTimer);
+      if (retryTimer) clearTimeout(retryTimer);
+      stallTimer = null;
+      retryTimer = null;
+    };
 
-    const onPlaying = () => clearTimeout(timer);
+    const onPlaying = () => {
+      clearTimers();
+      setVideoFailed(false);
+    };
     video.addEventListener("playing", onPlaying);
 
-    void video.play().catch(() => setVideoFailed(true));
+    const tryPlay = () => {
+      if (cancelled) return;
+      attempt += 1;
+
+      video.preload = "auto";
+      try {
+        video.load();
+      } catch {
+        /* ignore */
+      }
+
+      stallTimer = setTimeout(() => {
+        if (cancelled) return;
+        if (video.readyState < 3 || video.paused) scheduleRetry();
+      }, 4000);
+
+      void video.play().catch(() => {
+        if (!cancelled) scheduleRetry();
+      });
+    };
+
+    const scheduleRetry = () => {
+      clearTimers();
+      if (attempt >= MAX_ATTEMPTS) {
+        setVideoFailed(true);
+        return;
+      }
+      const backoff = 600 * attempt; // 600ms, 1200ms
+      retryTimer = setTimeout(tryPlay, backoff);
+    };
+
+    tryPlay();
 
     return () => {
-      clearTimeout(timer);
+      cancelled = true;
+      clearTimers();
       video.removeEventListener("playing", onPlaying);
     };
   }, [videoLoaded, inView]);
+
 
 
 
