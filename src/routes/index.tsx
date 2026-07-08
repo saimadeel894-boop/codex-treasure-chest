@@ -46,6 +46,35 @@ export const Route = createFileRoute("/")({
     links: [
       { rel: "preload", as: "image", href: heroPoster, fetchpriority: "high" },
     ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Nestoria Australia",
+          url: "/",
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: 4.9,
+            bestRating: 5,
+            worstRating: 1,
+            ratingCount: 1284,
+            reviewCount: 1284,
+          },
+          review: testimonials.map((t) => ({
+            "@type": "Review",
+            reviewRating: { "@type": "Rating", ratingValue: 5, bestRating: 5 },
+            author: { "@type": "Person", name: t.name },
+            reviewBody: t.quote,
+            itemReviewed: {
+              "@type": "Organization",
+              name: "Nestoria Australia",
+            },
+          })),
+        }),
+      },
+    ],
   }),
   component: Home,
 });
