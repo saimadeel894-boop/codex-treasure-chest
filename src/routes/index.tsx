@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useRef } from "react";
 import { ArrowRight, Building2, MapPin, ShieldCheck, TrendingUp } from "lucide-react";
 
 import { Link } from "@/components/compat/Link";
