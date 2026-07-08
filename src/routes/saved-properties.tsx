@@ -6,7 +6,49 @@ import { useFavorites } from "@/hooks/use-favorites";
 import { properties } from "@/data/marketplace";
 
 export const Route = createFileRoute("/saved-properties")({
-  head: () => ({ meta: [{ title: "Saved properties | Nestoria" }] }),
+  head: () => ({
+    meta: [
+      { title: "Saved properties | Nestoria" },
+      {
+        name: "description",
+        content:
+          "View and search your saved Australian properties on Nestoria. Get alerts for new listings that match your saved searches.",
+      },
+      { property: "og:title", content: "Saved properties | Nestoria" },
+      {
+        property: "og:description",
+        content:
+          "View and search your saved Australian properties on Nestoria.",
+      },
+      { property: "og:url", content: "/saved-properties" },
+    ],
+    links: [{ rel: "canonical", href: "/saved-properties" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "SearchResultsPage",
+          name: "Saved properties",
+          url: "/saved-properties",
+          isPartOf: { "@id": "/#website" },
+          about: {
+            "@type": "Thing",
+            name: "Saved property searches on Nestoria Australia",
+          },
+          potentialAction: {
+            "@type": "SearchAction",
+            name: "Search saved properties",
+            target: {
+              "@type": "EntryPoint",
+              urlTemplate: "/saved-properties?q={search_term_string}",
+            },
+            "query-input": "required name=search_term_string",
+          },
+        }),
+      },
+    ],
+  }),
   component: SavedProperties,
 });
 
