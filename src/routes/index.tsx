@@ -96,6 +96,7 @@ function Home() {
           className="absolute inset-0 h-full w-full object-cover"
         />
         <video
+          ref={videoRef}
           className="absolute inset-0 h-full w-full object-cover"
           autoPlay
           muted
