@@ -60,6 +60,7 @@ function PropertyPage() {
               </p>
             </div>
             <SaveButton
+              propertyId={property.id}
               label={property.title}
               withText
               className="flex items-center gap-2 rounded-md border border-slate-200 px-4 py-2.5 text-sm font-bold text-slate-700 hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-800"

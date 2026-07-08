@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Heart } from "lucide-react";
 import { Link } from "@/components/compat/Link";
 import { PropertyCard } from "@/components/PropertyCard";
+import { useFavorites } from "@/hooks/use-favorites";
 import { properties } from "@/data/marketplace";
 
 export const Route = createFileRoute("/saved-properties")({
@@ -10,13 +11,17 @@ export const Route = createFileRoute("/saved-properties")({
 });
 
 function SavedProperties() {
-  // Mock: pretend the first two are saved
-  const saved = properties.slice(0, 2);
+  const { ids } = useFavorites();
+  const saved = properties.filter((p) => ids.includes(p.id));
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <header className="mb-8 flex items-center gap-3">
         <Heart className="text-rose-500" aria-hidden="true" />
         <h1 className="text-3xl font-bold text-slate-950">Saved properties</h1>
+        {saved.length > 0 && (
+          <span className="text-sm text-slate-600">({saved.length})</span>
+        )}
       </header>
       {saved.length === 0 ? (
         <div className="rounded-lg border border-dashed border-slate-300 bg-white p-12 text-center">

@@ -1,6 +1,8 @@
 import { Bath, BedDouble, Car, MapPin } from "lucide-react";
+import { useState, type MouseEvent } from "react";
 import { Image } from "@/components/compat/Image";
 import { Link } from "@/components/compat/Link";
+import { QuickViewModal } from "@/components/QuickViewModal";
 import { SaveButton } from "@/components/SaveButton";
 import type { Property } from "@/data/marketplace";
 import { getAgentForProperty } from "@/data/marketplace";
@@ -12,6 +14,13 @@ type PropertyCardProps = {
 
 export function PropertyCard({ property, compact = false }: PropertyCardProps) {
   const agent = getAgentForProperty(property);
+  const [quickOpen, setQuickOpen] = useState(false);
+
+  const openQuick = (e: MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setQuickOpen(true);
+  };
 
   return (
     <article className="group overflow-hidden rounded-3xl border border-border/70 bg-surface shadow-soft transition duration-500 hover:-translate-y-1 hover:shadow-luxury">
@@ -42,6 +51,7 @@ export function PropertyCard({ property, compact = false }: PropertyCardProps) {
           </div>
 
           <SaveButton
+            propertyId={property.id}
             label={property.title}
             className="absolute right-4 top-4 flex size-10 items-center justify-center rounded-full bg-background/95 text-charcoal-soft shadow-soft transition hover:text-primary"
           />
@@ -53,9 +63,14 @@ export function PropertyCard({ property, compact = false }: PropertyCardProps) {
               </p>
               <p className="mt-1 font-serif text-2xl leading-none">{property.priceLabel}</p>
             </div>
-            <span className="rounded-full bg-background/95 px-3 py-1.5 text-xs font-medium text-charcoal shadow-soft opacity-0 transition group-hover:opacity-100">
+            <button
+              type="button"
+              onClick={openQuick}
+              className="rounded-full bg-background/95 px-3 py-1.5 text-xs font-medium text-charcoal shadow-soft opacity-0 transition hover:bg-primary hover:text-primary-foreground group-hover:opacity-100 focus:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              aria-label={`Quick view ${property.title}`}
+            >
               Quick view
-            </span>
+            </button>
           </div>
         </div>
       </Link>
@@ -107,15 +122,18 @@ export function PropertyCard({ property, compact = false }: PropertyCardProps) {
                 <p className="text-[11px] text-muted-foreground">{property.listedAt}</p>
               </div>
             </div>
-            <Link
-              href={`/properties/${property.id}`}
+            <button
+              type="button"
+              onClick={openQuick}
               className="rounded-full border border-border px-4 py-2 text-xs font-medium text-charcoal transition hover:border-primary hover:bg-primary hover:text-primary-foreground"
             >
-              View
-            </Link>
+              Quick view
+            </button>
           </div>
         )}
       </div>
+
+      <QuickViewModal property={property} open={quickOpen} onClose={() => setQuickOpen(false)} />
     </article>
   );
 }
