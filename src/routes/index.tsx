@@ -108,21 +108,25 @@ function Home() {
           muted
           loop
           playsInline
-          preload="auto"
+          preload="metadata"
           poster={heroPoster}
           width={1920}
           height={1080}
           disableRemotePlayback
           aria-hidden="true"
         >
-          <source
-            src="https://cdn.coverr.co/videos/coverr-a-luxury-house-with-a-pool-2633/1080p.mp4"
-            type="video/mp4"
-          />
-          <source
-            src="https://cdn.coverr.co/videos/coverr-aerial-view-of-a-modern-neighborhood-8801/1080p.mp4"
-            type="video/mp4"
-          />
+          {videoLoaded && (
+            <>
+              <source
+                src="https://cdn.coverr.co/videos/coverr-a-luxury-house-with-a-pool-2633/1080p.mp4"
+                type="video/mp4"
+              />
+              <source
+                src="https://cdn.coverr.co/videos/coverr-aerial-view-of-a-modern-neighborhood-8801/1080p.mp4"
+                type="video/mp4"
+              />
+            </>
+          )}
         </video>
         <div className="absolute inset-0 bg-gradient-to-b from-slate-950/70 via-slate-950/50 to-slate-950/80" />
 
