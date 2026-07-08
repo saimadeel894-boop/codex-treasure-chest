@@ -67,7 +67,7 @@ export const Route = createFileRoute("/properties/$id")({
               ratingValue: agent?.rating ?? 4.8,
               bestRating: 5,
               worstRating: 1,
-              reviewCount: agent?.reviews ?? 42,
+              reviewCount: agent?.soldLastYear ?? 42,
             },
             review: agent
               ? [
@@ -79,7 +79,7 @@ export const Route = createFileRoute("/properties/$id")({
                       bestRating: 5,
                     },
                     author: { "@type": "Person", name: "Verified Nestoria buyer" },
-                    reviewBody: `Working with ${agent.name} at ${agent.agency} on ${property.suburb} listings was seamless — professional presentation, honest guidance, and swift communication throughout.`,
+                    reviewBody: `Working with ${agent.name} on ${property.suburb} listings was seamless — professional presentation, honest guidance, and swift communication throughout.`,
                   },
                 ]
               : undefined,
