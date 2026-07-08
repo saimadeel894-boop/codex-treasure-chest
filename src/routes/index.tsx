@@ -62,37 +62,161 @@ function Home() {
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
   const [inView, setInView] = useState(false);
+  const [diagnostics, setDiagnostics] = useState<string[]>([]);
 
-  // Observe visibility + wire error/playing listeners.
+  // Detailed diagnostic logger — writes to console + in-memory buffer for the UI overlay.
+  const logVideo = (event: string, extra?: Record<string, unknown>) => {
+    const video = videoRef.current;
+    const nav = typeof navigator !== "undefined" ? navigator : undefined;
+    // NetworkInformation is not in lib.dom yet.
+    const conn = (nav as unknown as { connection?: { effectiveType?: string; downlink?: number; rtt?: number; saveData?: boolean } })?.connection;
+    const MEDIA_ERR: Record<number, string> = {
+      1: "MEDIA_ERR_ABORTED",
+      2: "MEDIA_ERR_NETWORK",
+      3: "MEDIA_ERR_DECODE",
+      4: "MEDIA_ERR_SRC_NOT_SUPPORTED",
+    };
+    const READY_STATE: Record<number, string> = {
+      0: "HAVE_NOTHING",
+      1: "HAVE_METADATA",
+      2: "HAVE_CURRENT_DATA",
+      3: "HAVE_FUTURE_DATA",
+      4: "HAVE_ENOUGH_DATA",
+    };
+    const NETWORK_STATE: Record<number, string> = {
+      0: "NETWORK_EMPTY",
+      1: "NETWORK_IDLE",
+      2: "NETWORK_LOADING",
+      3: "NETWORK_NO_SOURCE",
+    };
+
+    const err = video?.error;
+    const payload = {
+      event,
+      time: new Date().toISOString(),
+      currentSrc: video?.currentSrc || "(none)",
+      readyState: video ? `${video.readyState} ${READY_STATE[video.readyState] ?? ""}` : "n/a",
+      networkState: video ? `${video.networkState} ${NETWORK_STATE[video.networkState] ?? ""}` : "n/a",
+      paused: video?.paused,
+      muted: video?.muted,
+      autoplay: video?.autoplay,
+      duration: video?.duration,
+      videoWidth: video?.videoWidth,
+      videoHeight: video?.videoHeight,
+      mediaError: err ? `${err.code} ${MEDIA_ERR[err.code] ?? ""}: ${err.message || "(no message)"}` : null,
+      canPlayMp4: video?.canPlayType("video/mp4") || "(unknown)",
+      canPlayWebm: video?.canPlayType("video/webm") || "(unknown)",
+      userAgent: nav?.userAgent,
+      online: nav?.onLine,
+      connection: conn
+        ? `${conn.effectiveType ?? "?"} down=${conn.downlink ?? "?"}Mbps rtt=${conn.rtt ?? "?"}ms saveData=${conn.saveData ?? false}`
+        : "(unavailable)",
+      ...extra,
+    };
+
+    // eslint-disable-next-line no-console
+    console.info("[hero-video]", payload);
+
+    const line = `[${new Date().toLocaleTimeString()}] ${event}${
+      extra?.reason ? ` — ${String(extra.reason)}` : ""
+    }${payload.mediaError ? ` — ${payload.mediaError}` : ""}`;
+    setDiagnostics((prev) => [...prev.slice(-19), line]);
+  };
+
+  // Observe visibility + wire full media event listeners with diagnostics.
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    const prefersReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReducedMotion) return;
+    logVideo("mount", {
+      prefersReducedMotion: window.matchMedia?.("(prefers-reduced-motion: reduce)").matches,
+      hasIntersectionObserver: typeof IntersectionObserver !== "undefined",
+    });
 
-    const markFailed = () => setVideoFailed(true);
-    video.addEventListener("error", markFailed);
+    const prefersReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) {
+      logVideo("skipped:prefers-reduced-motion");
+      return;
+    }
+
+    // Attach a broad set of media events so we can see exactly where the pipeline stalls.
+    const mediaEvents = [
+      "loadstart",
+      "loadedmetadata",
+      "loadeddata",
+      "canplay",
+      "canplaythrough",
+      "waiting",
+      "stalled",
+      "suspend",
+      "abort",
+      "emptied",
+      "play",
+      "playing",
+      "pause",
+      "ended",
+      "error",
+    ] as const;
+
+    const handlers: Array<[string, EventListener]> = mediaEvents.map((name) => {
+      const handler: EventListener = () => {
+        if (name === "error") {
+          logVideo(`event:${name}`, { reason: "media element error fired" });
+          setVideoFailed(true);
+        } else {
+          logVideo(`event:${name}`);
+        }
+      };
+      video.addEventListener(name, handler);
+      return [name, handler];
+    });
+
+    // Source-level errors (e.g. 404 on the .webm) do not bubble to <video>.
+    const sourceErrorHandler: EventListener = (e) => {
+      const src = (e.target as HTMLSourceElement | null)?.src;
+      logVideo("event:source-error", { reason: `source failed to load: ${src ?? "(unknown)"}` });
+    };
+
+    const attachSourceListeners = () => {
+      video.querySelectorAll("source").forEach((s) => {
+        s.removeEventListener("error", sourceErrorHandler);
+        s.addEventListener("error", sourceErrorHandler);
+      });
+    };
+    attachSourceListeners();
+    const sourceObserver = new MutationObserver(attachSourceListeners);
+    sourceObserver.observe(video, { childList: true });
 
     if (typeof IntersectionObserver === "undefined") {
       setInView(true);
-      return () => video.removeEventListener("error", markFailed);
+      return () => {
+        handlers.forEach(([n, h]) => video.removeEventListener(n, h));
+        sourceObserver.disconnect();
+      };
     }
 
     const observer = new IntersectionObserver(
-      ([entry]) => setInView(entry.isIntersecting),
+      ([entry]) => {
+        setInView(entry.isIntersecting);
+        logVideo("visibility", { reason: entry.isIntersecting ? "entered viewport" : "left viewport" });
+      },
       { threshold: 0.15 },
     );
     observer.observe(video);
     return () => {
       observer.disconnect();
-      video.removeEventListener("error", markFailed);
+      sourceObserver.disconnect();
+      handlers.forEach(([n, h]) => video.removeEventListener(n, h));
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Trigger source injection on first visibility.
   useEffect(() => {
-    if (inView && !videoLoaded) setVideoLoaded(true);
+    if (inView && !videoLoaded) {
+      setVideoLoaded(true);
+      logVideo("sources:inject");
+    }
   }, [inView, videoLoaded]);
 
   // After sources are in the DOM, load and play; pause when offscreen.
@@ -122,37 +246,53 @@ function Home() {
     const onPlaying = () => {
       clearTimers();
       setVideoFailed(false);
+      logVideo("playback:success", { reason: `playing after attempt ${attempt}` });
     };
     video.addEventListener("playing", onPlaying);
 
     const tryPlay = () => {
       if (cancelled) return;
       attempt += 1;
+      logVideo("playback:attempt", { reason: `attempt ${attempt}/${MAX_ATTEMPTS}` });
 
       video.preload = "auto";
       try {
         video.load();
-      } catch {
-        /* ignore */
+      } catch (err) {
+        logVideo("playback:load-threw", { reason: (err as Error)?.message ?? String(err) });
       }
 
       stallTimer = setTimeout(() => {
         if (cancelled) return;
-        if (video.readyState < 3 || video.paused) scheduleRetry();
+        if (video.readyState < 3 || video.paused) {
+          logVideo("playback:stall", {
+            reason: `4s stall — readyState=${video.readyState}, paused=${video.paused}`,
+          });
+          scheduleRetry();
+        }
       }, 4000);
 
-      void video.play().catch(() => {
-        if (!cancelled) scheduleRetry();
+      void video.play().catch((err: unknown) => {
+        if (!cancelled) {
+          logVideo("playback:play-rejected", {
+            reason: (err as Error)?.name
+              ? `${(err as Error).name}: ${(err as Error).message}`
+              : String(err),
+          });
+          scheduleRetry();
+        }
       });
     };
 
     const scheduleRetry = () => {
       clearTimers();
       if (attempt >= MAX_ATTEMPTS) {
+        logVideo("playback:gave-up", { reason: `all ${MAX_ATTEMPTS} attempts failed — showing poster` });
         setVideoFailed(true);
         return;
       }
       const backoff = 600 * attempt; // 600ms, 1200ms
+      logVideo("playback:retry-scheduled", { reason: `retrying in ${backoff}ms` });
       retryTimer = setTimeout(tryPlay, backoff);
     };
 
@@ -163,8 +303,8 @@ function Home() {
       clearTimers();
       video.removeEventListener("playing", onPlaying);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [videoLoaded, inView]);
-
 
 
 
@@ -201,6 +341,26 @@ function Home() {
             </>
           )}
         </video>
+        {videoFailed && (
+          <div
+            role="status"
+            aria-live="polite"
+            className="absolute left-4 top-4 z-20 max-w-sm rounded-lg border border-red-400/40 bg-red-950/80 px-3 py-2 text-xs text-red-50 shadow-lg backdrop-blur-md"
+          >
+            <div className="mb-1 font-semibold">Hero video failed to play</div>
+            <div className="mb-1 opacity-80">
+              Showing poster fallback. Open the browser console and filter by <code>[hero-video]</code> for full diagnostics.
+            </div>
+            {diagnostics.length > 0 && (
+              <ul className="mt-1 max-h-40 overflow-auto space-y-0.5 font-mono text-[10px] leading-tight opacity-90">
+                {diagnostics.slice(-8).map((line, i) => (
+                  <li key={i}>{line}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
+
         <div className="absolute inset-0 bg-gradient-to-b from-slate-950/70 via-slate-950/50 to-slate-950/80" />
 
         <div className="relative mx-auto flex min-h-[92vh] max-w-7xl flex-col items-center justify-center px-4 py-24 text-center sm:px-6 lg:px-8">
