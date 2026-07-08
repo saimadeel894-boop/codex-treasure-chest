@@ -9,6 +9,30 @@ export const Route = createFileRoute("/search")({
     meta: [
       { title: "Search properties | Nestoria Australia" },
       { name: "description", content: "Search homes for sale and rent across Australia." },
+      { property: "og:title", content: "Search properties | Nestoria Australia" },
+      { property: "og:description", content: "Search homes for sale and rent across Australia." },
+      { property: "og:url", content: "/search" },
+    ],
+    links: [{ rel: "canonical", href: "/search" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "SearchResultsPage",
+          name: "Search properties",
+          url: "/search",
+          isPartOf: { "@id": "/#website" },
+          potentialAction: {
+            "@type": "SearchAction",
+            target: {
+              "@type": "EntryPoint",
+              urlTemplate: "/search?location={search_term_string}",
+            },
+            "query-input": "required name=search_term_string",
+          },
+        }),
+      },
     ],
   }),
   component: SearchPage,

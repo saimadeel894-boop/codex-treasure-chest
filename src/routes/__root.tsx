@@ -143,13 +143,32 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "WebSite",
+          "@id": "/#website",
           name: "Nestoria Australia",
+          alternateName: "Nestoria AU",
           url: "/",
-          potentialAction: {
-            "@type": "SearchAction",
-            target: "/search?location={search_term_string}",
-            "query-input": "required name=search_term_string",
-          },
+          inLanguage: "en-AU",
+          publisher: { "@type": "Organization", name: "Nestoria Australia" },
+          potentialAction: [
+            {
+              "@type": "SearchAction",
+              name: "Search properties",
+              target: {
+                "@type": "EntryPoint",
+                urlTemplate: "/search?location={search_term_string}",
+              },
+              "query-input": "required name=search_term_string",
+            },
+            {
+              "@type": "SearchAction",
+              name: "Search saved properties",
+              target: {
+                "@type": "EntryPoint",
+                urlTemplate: "/saved-properties?q={search_term_string}",
+              },
+              "query-input": "required name=search_term_string",
+            },
+          ],
         }),
       },
       {
