@@ -9,71 +9,43 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SearchRouteImport } from './routes/search'
-import { Route as SavedPropertiesRouteImport } from './routes/saved-properties'
-import { Route as RegisterRouteImport } from './routes/register'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as ListPropertyRouteImport } from './routes/list-property'
-import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
-import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as ContactRouteImport } from './routes/contact'
-import { Route as BlogRouteImport } from './routes/blog'
-import { Route as AboutRouteImport } from './routes/about'
+import { Route as SoldRouteImport } from './routes/sold'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as RentRouteImport } from './routes/rent'
+import { Route as BuyRouteImport } from './routes/buy'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PropertiesIdRouteImport } from './routes/properties.$id'
-import { Route as EditPropertyIdRouteImport } from './routes/edit-property.$id'
-import { Route as BlogIdRouteImport } from './routes/blog.$id'
-import { Route as AgentsIdRouteImport } from './routes/agents.$id'
-import { Route as AgenciesIdRouteImport } from './routes/agencies.$id'
+import { Route as AuthenticatedFavouritesRouteImport } from './routes/_authenticated/favourites'
 
-const SearchRoute = SearchRouteImport.update({
-  id: '/search',
-  path: '/search',
+const SoldRoute = SoldRouteImport.update({
+  id: '/sold',
+  path: '/sold',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SavedPropertiesRoute = SavedPropertiesRouteImport.update({
-  id: '/saved-properties',
-  path: '/saved-properties',
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RegisterRoute = RegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
+const RentRoute = RentRouteImport.update({
+  id: '/rent',
+  path: '/rent',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
+const BuyRoute = BuyRouteImport.update({
+  id: '/buy',
+  path: '/buy',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ListPropertyRoute = ListPropertyRouteImport.update({
-  id: '/list-property',
-  path: '/list-property',
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
-  id: '/forgot-password',
-  path: '/forgot-password',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ContactRoute = ContactRouteImport.update({
-  id: '/contact',
-  path: '/contact',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BlogRoute = BlogRouteImport.update({
-  id: '/blog',
-  path: '/blog',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AboutRoute = AboutRouteImport.update({
-  id: '/about',
-  path: '/about',
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -86,227 +58,131 @@ const PropertiesIdRoute = PropertiesIdRouteImport.update({
   path: '/properties/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
-const EditPropertyIdRoute = EditPropertyIdRouteImport.update({
-  id: '/edit-property/$id',
-  path: '/edit-property/$id',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BlogIdRoute = BlogIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => BlogRoute,
-} as any)
-const AgentsIdRoute = AgentsIdRouteImport.update({
-  id: '/agents/$id',
-  path: '/agents/$id',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AgenciesIdRoute = AgenciesIdRouteImport.update({
-  id: '/agencies/$id',
-  path: '/agencies/$id',
-  getParentRoute: () => rootRouteImport,
+const AuthenticatedFavouritesRoute = AuthenticatedFavouritesRouteImport.update({
+  id: '/favourites',
+  path: '/favourites',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/blog': typeof BlogRouteWithChildren
-  '/contact': typeof ContactRoute
-  '/dashboard': typeof DashboardRoute
-  '/forgot-password': typeof ForgotPasswordRoute
-  '/list-property': typeof ListPropertyRoute
-  '/login': typeof LoginRoute
-  '/register': typeof RegisterRoute
-  '/saved-properties': typeof SavedPropertiesRoute
-  '/search': typeof SearchRoute
-  '/agencies/$id': typeof AgenciesIdRoute
-  '/agents/$id': typeof AgentsIdRoute
-  '/blog/$id': typeof BlogIdRoute
-  '/edit-property/$id': typeof EditPropertyIdRoute
+  '/auth': typeof AuthRoute
+  '/buy': typeof BuyRoute
+  '/rent': typeof RentRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/sold': typeof SoldRoute
+  '/favourites': typeof AuthenticatedFavouritesRoute
   '/properties/$id': typeof PropertiesIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/blog': typeof BlogRouteWithChildren
-  '/contact': typeof ContactRoute
-  '/dashboard': typeof DashboardRoute
-  '/forgot-password': typeof ForgotPasswordRoute
-  '/list-property': typeof ListPropertyRoute
-  '/login': typeof LoginRoute
-  '/register': typeof RegisterRoute
-  '/saved-properties': typeof SavedPropertiesRoute
-  '/search': typeof SearchRoute
-  '/agencies/$id': typeof AgenciesIdRoute
-  '/agents/$id': typeof AgentsIdRoute
-  '/blog/$id': typeof BlogIdRoute
-  '/edit-property/$id': typeof EditPropertyIdRoute
+  '/auth': typeof AuthRoute
+  '/buy': typeof BuyRoute
+  '/rent': typeof RentRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/sold': typeof SoldRoute
+  '/favourites': typeof AuthenticatedFavouritesRoute
   '/properties/$id': typeof PropertiesIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/blog': typeof BlogRouteWithChildren
-  '/contact': typeof ContactRoute
-  '/dashboard': typeof DashboardRoute
-  '/forgot-password': typeof ForgotPasswordRoute
-  '/list-property': typeof ListPropertyRoute
-  '/login': typeof LoginRoute
-  '/register': typeof RegisterRoute
-  '/saved-properties': typeof SavedPropertiesRoute
-  '/search': typeof SearchRoute
-  '/agencies/$id': typeof AgenciesIdRoute
-  '/agents/$id': typeof AgentsIdRoute
-  '/blog/$id': typeof BlogIdRoute
-  '/edit-property/$id': typeof EditPropertyIdRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/buy': typeof BuyRoute
+  '/rent': typeof RentRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/sold': typeof SoldRoute
+  '/_authenticated/favourites': typeof AuthenticatedFavouritesRoute
   '/properties/$id': typeof PropertiesIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/about'
-    | '/blog'
-    | '/contact'
-    | '/dashboard'
-    | '/forgot-password'
-    | '/list-property'
-    | '/login'
-    | '/register'
-    | '/saved-properties'
-    | '/search'
-    | '/agencies/$id'
-    | '/agents/$id'
-    | '/blog/$id'
-    | '/edit-property/$id'
+    | '/auth'
+    | '/buy'
+    | '/rent'
+    | '/reset-password'
+    | '/sold'
+    | '/favourites'
     | '/properties/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/about'
-    | '/blog'
-    | '/contact'
-    | '/dashboard'
-    | '/forgot-password'
-    | '/list-property'
-    | '/login'
-    | '/register'
-    | '/saved-properties'
-    | '/search'
-    | '/agencies/$id'
-    | '/agents/$id'
-    | '/blog/$id'
-    | '/edit-property/$id'
+    | '/auth'
+    | '/buy'
+    | '/rent'
+    | '/reset-password'
+    | '/sold'
+    | '/favourites'
     | '/properties/$id'
   id:
     | '__root__'
     | '/'
-    | '/about'
-    | '/blog'
-    | '/contact'
-    | '/dashboard'
-    | '/forgot-password'
-    | '/list-property'
-    | '/login'
-    | '/register'
-    | '/saved-properties'
-    | '/search'
-    | '/agencies/$id'
-    | '/agents/$id'
-    | '/blog/$id'
-    | '/edit-property/$id'
+    | '/_authenticated'
+    | '/auth'
+    | '/buy'
+    | '/rent'
+    | '/reset-password'
+    | '/sold'
+    | '/_authenticated/favourites'
     | '/properties/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
-  BlogRoute: typeof BlogRouteWithChildren
-  ContactRoute: typeof ContactRoute
-  DashboardRoute: typeof DashboardRoute
-  ForgotPasswordRoute: typeof ForgotPasswordRoute
-  ListPropertyRoute: typeof ListPropertyRoute
-  LoginRoute: typeof LoginRoute
-  RegisterRoute: typeof RegisterRoute
-  SavedPropertiesRoute: typeof SavedPropertiesRoute
-  SearchRoute: typeof SearchRoute
-  AgenciesIdRoute: typeof AgenciesIdRoute
-  AgentsIdRoute: typeof AgentsIdRoute
-  EditPropertyIdRoute: typeof EditPropertyIdRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  BuyRoute: typeof BuyRoute
+  RentRoute: typeof RentRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
+  SoldRoute: typeof SoldRoute
   PropertiesIdRoute: typeof PropertiesIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/search': {
-      id: '/search'
-      path: '/search'
-      fullPath: '/search'
-      preLoaderRoute: typeof SearchRouteImport
+    '/sold': {
+      id: '/sold'
+      path: '/sold'
+      fullPath: '/sold'
+      preLoaderRoute: typeof SoldRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/saved-properties': {
-      id: '/saved-properties'
-      path: '/saved-properties'
-      fullPath: '/saved-properties'
-      preLoaderRoute: typeof SavedPropertiesRouteImport
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/register': {
-      id: '/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof RegisterRouteImport
+    '/rent': {
+      id: '/rent'
+      path: '/rent'
+      fullPath: '/rent'
+      preLoaderRoute: typeof RentRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
+    '/buy': {
+      id: '/buy'
+      path: '/buy'
+      fullPath: '/buy'
+      preLoaderRoute: typeof BuyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/list-property': {
-      id: '/list-property'
-      path: '/list-property'
-      fullPath: '/list-property'
-      preLoaderRoute: typeof ListPropertyRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/forgot-password': {
-      id: '/forgot-password'
-      path: '/forgot-password'
-      fullPath: '/forgot-password'
-      preLoaderRoute: typeof ForgotPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/contact': {
-      id: '/contact'
-      path: '/contact'
-      fullPath: '/contact'
-      preLoaderRoute: typeof ContactRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/blog': {
-      id: '/blog'
-      path: '/blog'
-      fullPath: '/blog'
-      preLoaderRoute: typeof BlogRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -323,62 +199,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PropertiesIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/edit-property/$id': {
-      id: '/edit-property/$id'
-      path: '/edit-property/$id'
-      fullPath: '/edit-property/$id'
-      preLoaderRoute: typeof EditPropertyIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/blog/$id': {
-      id: '/blog/$id'
-      path: '/$id'
-      fullPath: '/blog/$id'
-      preLoaderRoute: typeof BlogIdRouteImport
-      parentRoute: typeof BlogRoute
-    }
-    '/agents/$id': {
-      id: '/agents/$id'
-      path: '/agents/$id'
-      fullPath: '/agents/$id'
-      preLoaderRoute: typeof AgentsIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/agencies/$id': {
-      id: '/agencies/$id'
-      path: '/agencies/$id'
-      fullPath: '/agencies/$id'
-      preLoaderRoute: typeof AgenciesIdRouteImport
-      parentRoute: typeof rootRouteImport
+    '/_authenticated/favourites': {
+      id: '/_authenticated/favourites'
+      path: '/favourites'
+      fullPath: '/favourites'
+      preLoaderRoute: typeof AuthenticatedFavouritesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
   }
 }
 
-interface BlogRouteChildren {
-  BlogIdRoute: typeof BlogIdRoute
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedFavouritesRoute: typeof AuthenticatedFavouritesRoute
 }
 
-const BlogRouteChildren: BlogRouteChildren = {
-  BlogIdRoute: BlogIdRoute,
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedFavouritesRoute: AuthenticatedFavouritesRoute,
 }
 
-const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
-  BlogRoute: BlogRouteWithChildren,
-  ContactRoute: ContactRoute,
-  DashboardRoute: DashboardRoute,
-  ForgotPasswordRoute: ForgotPasswordRoute,
-  ListPropertyRoute: ListPropertyRoute,
-  LoginRoute: LoginRoute,
-  RegisterRoute: RegisterRoute,
-  SavedPropertiesRoute: SavedPropertiesRoute,
-  SearchRoute: SearchRoute,
-  AgenciesIdRoute: AgenciesIdRoute,
-  AgentsIdRoute: AgentsIdRoute,
-  EditPropertyIdRoute: EditPropertyIdRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
+  BuyRoute: BuyRoute,
+  RentRoute: RentRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
+  SoldRoute: SoldRoute,
   PropertiesIdRoute: PropertiesIdRoute,
 }
 export const routeTree = rootRouteImport
