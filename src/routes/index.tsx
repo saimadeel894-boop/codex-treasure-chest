@@ -127,7 +127,7 @@ function Home() {
         />
         <video
           ref={videoRef}
-          className="absolute inset-0 h-full w-full object-cover"
+          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${videoFailed ? "opacity-0" : "opacity-100"}`}
           autoPlay
           muted
           loop
