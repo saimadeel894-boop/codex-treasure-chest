@@ -63,7 +63,7 @@ export const Route = createFileRoute("/properties/$id")({
     if (!property) {
       return { meta: [{ title: "Property not found" }] };
     }
-    const agent = getAgentForProperty(property);
+    const testimonials_head = null; void testimonials_head;
     const testimonials = buildTestimonials(property.suburb);
     const path = `/properties/${params.id}`;
     const description = property.description?.slice(0, 155) ?? "Property details";
