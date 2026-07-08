@@ -14,7 +14,172 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      favourites: {
+        Row: {
+          created_at: string
+          property_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          property_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          property_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favourites_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      properties: {
+        Row: {
+          address_line: string
+          bathrooms: number
+          bedrooms: number
+          building_size_sqm: number | null
+          created_at: string
+          description: string
+          featured: boolean
+          features: string[]
+          id: string
+          is_published: boolean
+          land_size_sqm: number | null
+          latitude: number | null
+          listing_type: Database["public"]["Enums"]["listing_type"]
+          longitude: number | null
+          parking: number
+          postcode: string
+          price_cents: number
+          property_type: Database["public"]["Enums"]["property_type"]
+          published_at: string
+          rent_period: Database["public"]["Enums"]["rent_period"] | null
+          state: Database["public"]["Enums"]["au_state"]
+          suburb: string
+          title: string
+        }
+        Insert: {
+          address_line: string
+          bathrooms?: number
+          bedrooms?: number
+          building_size_sqm?: number | null
+          created_at?: string
+          description: string
+          featured?: boolean
+          features?: string[]
+          id?: string
+          is_published?: boolean
+          land_size_sqm?: number | null
+          latitude?: number | null
+          listing_type: Database["public"]["Enums"]["listing_type"]
+          longitude?: number | null
+          parking?: number
+          postcode: string
+          price_cents: number
+          property_type: Database["public"]["Enums"]["property_type"]
+          published_at?: string
+          rent_period?: Database["public"]["Enums"]["rent_period"] | null
+          state: Database["public"]["Enums"]["au_state"]
+          suburb: string
+          title: string
+        }
+        Update: {
+          address_line?: string
+          bathrooms?: number
+          bedrooms?: number
+          building_size_sqm?: number | null
+          created_at?: string
+          description?: string
+          featured?: boolean
+          features?: string[]
+          id?: string
+          is_published?: boolean
+          land_size_sqm?: number | null
+          latitude?: number | null
+          listing_type?: Database["public"]["Enums"]["listing_type"]
+          longitude?: number | null
+          parking?: number
+          postcode?: string
+          price_cents?: number
+          property_type?: Database["public"]["Enums"]["property_type"]
+          published_at?: string
+          rent_period?: Database["public"]["Enums"]["rent_period"] | null
+          state?: Database["public"]["Enums"]["au_state"]
+          suburb?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      property_images: {
+        Row: {
+          alt: string | null
+          created_at: string
+          id: string
+          property_id: string
+          sort_order: number
+          url: string
+        }
+        Insert: {
+          alt?: string | null
+          created_at?: string
+          id?: string
+          property_id: string
+          sort_order?: number
+          url: string
+        }
+        Update: {
+          alt?: string | null
+          created_at?: string
+          id?: string
+          property_id?: string
+          sort_order?: number
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_images_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +188,10 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      au_state: "NSW" | "VIC" | "QLD" | "WA" | "SA" | "TAS" | "ACT" | "NT"
+      listing_type: "sale" | "rent" | "sold"
+      property_type: "house" | "apartment" | "townhouse" | "land" | "rural"
+      rent_period: "week" | "month"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +318,11 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      au_state: ["NSW", "VIC", "QLD", "WA", "SA", "TAS", "ACT", "NT"],
+      listing_type: ["sale", "rent", "sold"],
+      property_type: ["house", "apartment", "townhouse", "land", "rural"],
+      rent_period: ["week", "month"],
+    },
   },
 } as const
