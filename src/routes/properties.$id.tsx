@@ -240,6 +240,7 @@ function PropertyPage() {
   const agent = getAgentForProperty(property);
   const agency = getAgencyForProperty(property);
   const similar = properties.filter((p) => p.id !== property.id && p.state === property.state).slice(0, 3);
+  const testimonials = buildTestimonials(property.suburb);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
