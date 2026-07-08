@@ -11,6 +11,10 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
+
+
 
 function NotFoundComponent() {
   return (
@@ -77,14 +81,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Nestoria Australia | Property Marketplace" },
+      {
+        name: "description",
+        content:
+          "A modern Australian real estate marketplace for buying, renting, listing, and discovering properties.",
+      },
+      { name: "author", content: "Nestoria Australia" },
+      { property: "og:title", content: "Nestoria Australia | Property Marketplace" },
+      {
+        property: "og:description",
+        content:
+          "Buy, rent, sell and discover premium homes across Australia in a polished marketplace experience.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
@@ -102,11 +113,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className="h-full antialiased">
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body className="flex min-h-full flex-col bg-slate-50 text-slate-950">
         {children}
         <Scripts />
       </body>
@@ -119,8 +130,11 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <Navbar />
+      <main className="flex-1">
+        <Outlet />
+      </main>
+      <Footer />
     </QueryClientProvider>
   );
 }
