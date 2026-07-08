@@ -1,1 +1,0 @@
-ALTER TABLE public.property_images ADD COLUMN storage_path text;
