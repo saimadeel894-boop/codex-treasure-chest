@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as SavedPropertiesRouteImport } from './routes/saved-properties'
 import { Route as RegisterRouteImport } from './routes/register'
@@ -32,6 +33,11 @@ import { Route as AgenciesIdRouteImport } from './routes/agencies.$id'
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SearchRoute = SearchRouteImport.update({
@@ -139,6 +145,7 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterRoute
   '/saved-properties': typeof SavedPropertiesRoute
   '/search': typeof SearchRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/agencies/$id': typeof AgenciesIdRoute
   '/agents/$id': typeof AgentsIdRoute
@@ -160,6 +167,7 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterRoute
   '/saved-properties': typeof SavedPropertiesRoute
   '/search': typeof SearchRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/agencies/$id': typeof AgenciesIdRoute
   '/agents/$id': typeof AgentsIdRoute
@@ -182,6 +190,7 @@ export interface FileRoutesById {
   '/register': typeof RegisterRoute
   '/saved-properties': typeof SavedPropertiesRoute
   '/search': typeof SearchRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/agencies/$id': typeof AgenciesIdRoute
   '/agents/$id': typeof AgentsIdRoute
@@ -205,6 +214,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/saved-properties'
     | '/search'
+    | '/sitemap.xml'
     | '/terms'
     | '/agencies/$id'
     | '/agents/$id'
@@ -226,6 +236,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/saved-properties'
     | '/search'
+    | '/sitemap.xml'
     | '/terms'
     | '/agencies/$id'
     | '/agents/$id'
@@ -247,6 +258,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/saved-properties'
     | '/search'
+    | '/sitemap.xml'
     | '/terms'
     | '/agencies/$id'
     | '/agents/$id'
@@ -269,6 +281,7 @@ export interface RootRouteChildren {
   RegisterRoute: typeof RegisterRoute
   SavedPropertiesRoute: typeof SavedPropertiesRoute
   SearchRoute: typeof SearchRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
   AgenciesIdRoute: typeof AgenciesIdRoute
   AgentsIdRoute: typeof AgentsIdRoute
@@ -283,6 +296,13 @@ declare module '@tanstack/react-router' {
       path: '/terms'
       fullPath: '/terms'
       preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/search': {
@@ -438,6 +458,7 @@ const rootRouteChildren: RootRouteChildren = {
   RegisterRoute: RegisterRoute,
   SavedPropertiesRoute: SavedPropertiesRoute,
   SearchRoute: SearchRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
   AgenciesIdRoute: AgenciesIdRoute,
   AgentsIdRoute: AgentsIdRoute,

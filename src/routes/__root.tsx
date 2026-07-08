@@ -110,7 +110,49 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
-
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Nestoria Australia",
+          url: "/",
+          logo: "/favicon.ico",
+          description:
+            "A modern Australian real estate marketplace for buying, renting, listing, and discovering premium properties.",
+          areaServed: "AU",
+          sameAs: [
+            "https://www.instagram.com/",
+            "https://twitter.com/",
+            "https://www.linkedin.com/",
+          ],
+          contactPoint: [
+            {
+              "@type": "ContactPoint",
+              telephone: "+61-1300-000-123",
+              contactType: "customer support",
+              areaServed: "AU",
+              availableLanguage: ["English"],
+            },
+          ],
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "Nestoria Australia",
+          url: "/",
+          potentialAction: {
+            "@type": "SearchAction",
+            target: "/search?location={search_term_string}",
+            "query-input": "required name=search_term_string",
+          },
+        }),
+      },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
