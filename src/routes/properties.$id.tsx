@@ -63,6 +63,29 @@ export const Route = createFileRoute("/properties/$id")({
             },
           }),
         },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Home", item: "/" },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: property.mode === "Rent" ? "Rent" : "Buy",
+                item: `/search?mode=${property.mode.toLowerCase()}`,
+              },
+              {
+                "@type": "ListItem",
+                position: 3,
+                name: `${property.suburb}, ${property.state}`,
+                item: `/search?mode=${property.mode.toLowerCase()}&state=${property.state}&suburb=${encodeURIComponent(property.suburb)}`,
+              },
+              { "@type": "ListItem", position: 4, name: property.title, item: path },
+            ],
+          }),
+        },
       ],
     };
   },
