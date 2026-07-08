@@ -4,6 +4,8 @@ import { ArrowRight, Building2, MapPin, ShieldCheck, TrendingUp } from "lucide-r
 
 import { Link } from "@/components/compat/Link";
 import heroPoster from "@/assets/hero-poster.jpg";
+import heroVideo from "@/assets/hero-video.mp4";
+import heroVideoWebm from "@/assets/hero-video.webm";
 import { AgentCard } from "@/components/AgentCard";
 import { PropertyCard } from "@/components/PropertyCard";
 import { SearchComponent } from "@/components/SearchComponent";
@@ -29,7 +31,7 @@ export const Route = createFileRoute("/")({
       { name: "twitter:image", content: heroPoster },
     ],
     links: [
-      { rel: "preload", as: "image", href: heroPoster, fetchpriority: "high" },
+      { rel: "preload", as: "image", href: heroPoster, fetchPriority: "high" },
     ],
   }),
   component: Home,
@@ -194,14 +196,8 @@ function Home() {
         >
           {videoLoaded && (
             <>
-              <source
-                src="https://cdn.coverr.co/videos/coverr-a-luxury-house-with-a-pool-2633/1080p.mp4"
-                type="video/mp4"
-              />
-              <source
-                src="https://cdn.coverr.co/videos/coverr-aerial-view-of-a-modern-neighborhood-8801/1080p.mp4"
-                type="video/mp4"
-              />
+              <source src={heroVideoWebm} type="video/webm" />
+              <source src={heroVideo} type="video/mp4" />
             </>
           )}
         </video>
