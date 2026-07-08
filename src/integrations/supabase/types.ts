@@ -83,6 +83,7 @@ export type Database = {
           latitude: number | null
           listing_type: Database["public"]["Enums"]["listing_type"]
           longitude: number | null
+          owner_id: string | null
           parking: number
           postcode: string
           price_cents: number
@@ -108,6 +109,7 @@ export type Database = {
           latitude?: number | null
           listing_type: Database["public"]["Enums"]["listing_type"]
           longitude?: number | null
+          owner_id?: string | null
           parking?: number
           postcode: string
           price_cents: number
@@ -133,6 +135,7 @@ export type Database = {
           latitude?: number | null
           listing_type?: Database["public"]["Enums"]["listing_type"]
           longitude?: number | null
+          owner_id?: string | null
           parking?: number
           postcode?: string
           price_cents?: number
@@ -152,6 +155,7 @@ export type Database = {
           id: string
           property_id: string
           sort_order: number
+          storage_path: string | null
           url: string
         }
         Insert: {
@@ -160,6 +164,7 @@ export type Database = {
           id?: string
           property_id: string
           sort_order?: number
+          storage_path?: string | null
           url: string
         }
         Update: {
@@ -168,6 +173,7 @@ export type Database = {
           id?: string
           property_id?: string
           sort_order?: number
+          storage_path?: string | null
           url?: string
         }
         Relationships: [
@@ -180,14 +186,42 @@ export type Database = {
           },
         ]
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
+      app_role: "buyer" | "seller" | "agent" | "developer" | "admin"
       au_state: "NSW" | "VIC" | "QLD" | "WA" | "SA" | "TAS" | "ACT" | "NT"
       listing_type: "sale" | "rent" | "sold"
       property_type: "house" | "apartment" | "townhouse" | "land" | "rural"
@@ -319,6 +353,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      app_role: ["buyer", "seller", "agent", "developer", "admin"],
       au_state: ["NSW", "VIC", "QLD", "WA", "SA", "TAS", "ACT", "NT"],
       listing_type: ["sale", "rent", "sold"],
       property_type: ["house", "apartment", "townhouse", "land", "rural"],
