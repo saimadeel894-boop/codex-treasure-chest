@@ -1,25 +1,37 @@
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import { z } from "zod";
-import { fallback, zodValidator } from "@tanstack/zod-adapter";
 import { PropertyCard } from "@/components/site/PropertyCard";
 import { SearchBar } from "@/components/site/SearchBar";
 import { listProperties, type ListingType } from "@/lib/properties.functions";
 
-export const searchSchema = z.object({
-  location: fallback(z.string(), "").default(""),
-  propertyType: fallback(z.string(), "any").default("any"),
-  minBeds: fallback(z.number().int(), 0).default(0),
-  minBaths: fallback(z.number().int(), 0).default(0),
-  minParking: fallback(z.number().int(), 0).default(0),
-  minPrice: fallback(z.number(), 0).default(0),
-  maxPrice: fallback(z.number(), 0).default(0),
-  sort: fallback(z.string(), "newest").default("newest"),
-});
+export type SearchParams = {
+  location: string;
+  propertyType: string;
+  minBeds: number;
+  minBaths: number;
+  minParking: number;
+  minPrice: number;
+  maxPrice: number;
+  sort: string;
+};
 
-export const searchValidator = zodValidator(searchSchema);
-
-export type SearchParams = z.infer<typeof searchSchema>;
+export function validateSearchParams(input: Record<string, unknown>): SearchParams {
+  const num = (v: unknown) => {
+    const n = typeof v === "number" ? v : typeof v === "string" ? Number(v) : NaN;
+    return Number.isFinite(n) ? n : 0;
+  };
+  const str = (v: unknown, d = "") => (typeof v === "string" ? v : d);
+  return {
+    location: str(input.location, ""),
+    propertyType: str(input.propertyType, "any"),
+    minBeds: num(input.minBeds),
+    minBaths: num(input.minBaths),
+    minParking: num(input.minParking),
+    minPrice: num(input.minPrice),
+    maxPrice: num(input.maxPrice),
+    sort: str(input.sort, "newest"),
+  };
+}
 
 export function searchQuery(listingType: ListingType, s: SearchParams) {
   return queryOptions({
@@ -71,7 +83,7 @@ export function SearchResults({
   const { data: properties } = useSuspenseQuery(searchQuery(listingType, search));
 
   const update = (patch: Partial<SearchParams>) => {
-    navigate({ search: (prev: any) => ({ ...prev, ...patch }) as any });
+    navigate({ search: ((prev: any) => ({ ...prev, ...patch })) as any });
   };
 
   return (
