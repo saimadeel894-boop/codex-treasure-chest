@@ -1,6 +1,6 @@
-import { Link, useNavigate } from "@tanstack/react-router";
-import { Heart, Home, LogOut, Menu, User } from "lucide-react";
-import { useState } from "react";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { Heart, LogOut, Menu, User, X } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
@@ -14,8 +14,19 @@ const NAV = [
 export function SiteHeader() {
   const { signedIn, user, loading } = useAuth();
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
   const qc = useQueryClient();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isHome = pathname === "/";
+
+  useEffect(() => {
+    if (!isHome) return;
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [isHome]);
 
   async function handleSignOut() {
     await qc.cancelQueries();
@@ -24,42 +35,52 @@ export function SiteHeader() {
     navigate({ to: "/", replace: true });
   }
 
+  const transparent = isHome && !scrolled && !open;
+  const shellClass = transparent
+    ? "absolute inset-x-0 top-0 z-40 text-white"
+    : "sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur text-ink";
+  const linkColor = transparent
+    ? "text-white/85 hover:text-white"
+    : "text-ink/70 hover:text-ink";
+
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-7xl items-center gap-6 px-4 sm:px-6 lg:px-8">
-        <Link to="/" className="flex items-center gap-2 group">
-          <span className="flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm transition group-hover:scale-105">
-            <Home size={18} />
+    <header className={shellClass}>
+      <div className="mx-auto grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-6 py-6 md:grid-cols-[1fr_auto_1fr] md:px-12">
+        <Link to="/" className="min-w-0">
+          <span
+            className="font-display text-2xl tracking-[0.2em] uppercase"
+            style={{ letterSpacing: "0.18em" }}
+          >
+            Domicile
           </span>
-          <span className="font-display text-2xl font-semibold tracking-tight text-ink">Domicile</span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-1">
+        <nav className="hidden md:flex justify-center items-center gap-10">
           {NAV.map((n) => (
             <Link
               key={n.to}
               to={n.to}
-              className="px-3 py-2 text-sm font-medium text-muted-foreground rounded-md transition hover:text-ink hover:bg-muted"
-              activeProps={{ className: "text-ink bg-muted" }}
+              className={`text-[11px] font-semibold uppercase tracking-[0.25em] transition-colors ${linkColor} hover:text-primary`}
+              activeProps={{ className: "text-primary" }}
             >
               {n.label}
             </Link>
           ))}
         </nav>
 
-        <div className="ml-auto flex items-center gap-2">
+        <div className="hidden md:flex items-center justify-end gap-6">
           {!loading && signedIn && (
             <Link
               to="/favourites"
-              className="hidden sm:inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-ink hover:bg-muted transition"
+              className={`inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.25em] ${linkColor} hover:text-primary`}
             >
-              <Heart size={16} /> Saved
+              <Heart size={13} /> Saved
             </Link>
           )}
           {!loading && !signedIn && (
             <Link
               to="/auth"
-              className="inline-flex items-center rounded-full bg-ink text-background px-4 py-2 text-sm font-semibold shadow-sm transition hover:bg-primary"
+              className={`text-[11px] font-semibold uppercase tracking-[0.25em] ${linkColor} hover:text-primary`}
             >
               Sign in
             </Link>
@@ -67,42 +88,66 @@ export function SiteHeader() {
           {!loading && signedIn && (
             <button
               onClick={handleSignOut}
-              className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-ink hover:border-ink transition"
+              className={`inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.25em] ${linkColor} hover:text-primary`}
               title={user?.email ?? "Sign out"}
             >
-              <User size={14} /> <span className="hidden sm:inline max-w-[9rem] truncate">{user?.email}</span>
-              <LogOut size={14} />
+              <User size={12} />
+              <span className="max-w-[10rem] truncate normal-case tracking-normal">
+                {user?.email}
+              </span>
+              <LogOut size={12} />
             </button>
           )}
-          <button
-            onClick={() => setOpen((v) => !v)}
-            className="md:hidden inline-flex size-9 items-center justify-center rounded-md border border-border text-muted-foreground"
-            aria-label="Menu"
-          >
-            <Menu size={18} />
-          </button>
         </div>
+
+        <button
+          onClick={() => setOpen((v) => !v)}
+          className={`md:hidden inline-flex size-10 items-center justify-center rounded-full border justify-self-end ${transparent ? "border-white/40 text-white" : "border-border text-ink"}`}
+          aria-label="Menu"
+        >
+          {open ? <X size={18} /> : <Menu size={18} />}
+        </button>
       </div>
+
       {open && (
-        <div className="md:hidden border-t border-border bg-background">
-          <div className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-3">
+        <div className="md:hidden border-t border-white/10 bg-ink text-white">
+          <div className="mx-auto flex max-w-7xl flex-col px-6 py-6">
             {NAV.map((n) => (
               <Link
                 key={n.to}
                 to={n.to}
                 onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-ink"
+                className="border-b border-white/10 py-4 text-sm font-semibold uppercase tracking-[0.25em] text-white/80 hover:text-primary"
               >
                 {n.label}
               </Link>
             ))}
-            {signedIn && (
+            {signedIn ? (
+              <>
+                <Link
+                  to="/favourites"
+                  onClick={() => setOpen(false)}
+                  className="border-b border-white/10 py-4 text-sm font-semibold uppercase tracking-[0.25em] text-white/80 hover:text-primary"
+                >
+                  Saved properties
+                </Link>
+                <button
+                  onClick={() => {
+                    setOpen(false);
+                    handleSignOut();
+                  }}
+                  className="py-4 text-left text-sm font-semibold uppercase tracking-[0.25em] text-white/80 hover:text-primary"
+                >
+                  Sign out
+                </button>
+              </>
+            ) : (
               <Link
-                to="/favourites"
+                to="/auth"
                 onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-ink"
+                className="py-4 text-sm font-semibold uppercase tracking-[0.25em] text-white/80 hover:text-primary"
               >
-                Saved properties
+                Sign in
               </Link>
             )}
           </div>
