@@ -143,10 +143,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "WebSite",
-          "@id": "/#website",
+          "@id": "https://project--a0d96297-61d4-4523-ae1a-a95bf868e3f0.lovable.app/#website",
           name: "Nestoria Australia",
           alternateName: "Nestoria AU",
-          url: "/",
+          url: "https://project--a0d96297-61d4-4523-ae1a-a95bf868e3f0.lovable.app/",
           inLanguage: "en-AU",
           publisher: { "@type": "Organization", name: "Nestoria Australia" },
           potentialAction: [
@@ -155,7 +155,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
               name: "Search properties",
               target: {
                 "@type": "EntryPoint",
-                urlTemplate: "/search?location={search_term_string}",
+                urlTemplate:
+                  "https://project--a0d96297-61d4-4523-ae1a-a95bf868e3f0.lovable.app/search?location={search_term_string}",
               },
               "query-input": "required name=search_term_string",
             },
@@ -164,13 +165,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
               name: "Search saved properties",
               target: {
                 "@type": "EntryPoint",
-                urlTemplate: "/saved-properties?q={search_term_string}",
+                urlTemplate:
+                  "https://project--a0d96297-61d4-4523-ae1a-a95bf868e3f0.lovable.app/saved-properties?q={search_term_string}",
               },
               "query-input": "required name=search_term_string",
             },
           ],
         }),
       },
+
       {
         type: "application/ld+json",
         children: JSON.stringify({
