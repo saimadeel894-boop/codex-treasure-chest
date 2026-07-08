@@ -57,6 +57,7 @@ function Home() {
   const featuredProperties = properties.slice(0, 3);
   const latestProperties = properties.slice(3);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoLoaded, setVideoLoaded] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -71,6 +72,11 @@ function Home() {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
+          if (!videoLoaded) {
+            setVideoLoaded(true);
+            video.preload = "auto";
+            video.load();
+          }
           void video.play().catch(() => {});
         } else {
           video.pause();
@@ -81,7 +87,7 @@ function Home() {
 
     observer.observe(video);
     return () => observer.disconnect();
-  }, []);
+  }, [videoLoaded]);
 
 
   return (
