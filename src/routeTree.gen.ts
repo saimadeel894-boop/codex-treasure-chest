@@ -9,9 +9,12 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as SavedPropertiesRouteImport } from './routes/saved-properties'
 import { Route as RegisterRouteImport } from './routes/register'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as MyListingsRouteImport } from './routes/my-listings'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ListPropertyRouteImport } from './routes/list-property'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
@@ -26,6 +29,11 @@ import { Route as BlogIdRouteImport } from './routes/blog.$id'
 import { Route as AgentsIdRouteImport } from './routes/agents.$id'
 import { Route as AgenciesIdRouteImport } from './routes/agencies.$id'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
@@ -39,6 +47,16 @@ const SavedPropertiesRoute = SavedPropertiesRouteImport.update({
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MyListingsRoute = MyListingsRouteImport.update({
+  id: '/my-listings',
+  path: '/my-listings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -116,9 +134,12 @@ export interface FileRoutesByFullPath {
   '/forgot-password': typeof ForgotPasswordRoute
   '/list-property': typeof ListPropertyRoute
   '/login': typeof LoginRoute
+  '/my-listings': typeof MyListingsRoute
+  '/privacy': typeof PrivacyRoute
   '/register': typeof RegisterRoute
   '/saved-properties': typeof SavedPropertiesRoute
   '/search': typeof SearchRoute
+  '/terms': typeof TermsRoute
   '/agencies/$id': typeof AgenciesIdRoute
   '/agents/$id': typeof AgentsIdRoute
   '/blog/$id': typeof BlogIdRoute
@@ -134,9 +155,12 @@ export interface FileRoutesByTo {
   '/forgot-password': typeof ForgotPasswordRoute
   '/list-property': typeof ListPropertyRoute
   '/login': typeof LoginRoute
+  '/my-listings': typeof MyListingsRoute
+  '/privacy': typeof PrivacyRoute
   '/register': typeof RegisterRoute
   '/saved-properties': typeof SavedPropertiesRoute
   '/search': typeof SearchRoute
+  '/terms': typeof TermsRoute
   '/agencies/$id': typeof AgenciesIdRoute
   '/agents/$id': typeof AgentsIdRoute
   '/blog/$id': typeof BlogIdRoute
@@ -153,9 +177,12 @@ export interface FileRoutesById {
   '/forgot-password': typeof ForgotPasswordRoute
   '/list-property': typeof ListPropertyRoute
   '/login': typeof LoginRoute
+  '/my-listings': typeof MyListingsRoute
+  '/privacy': typeof PrivacyRoute
   '/register': typeof RegisterRoute
   '/saved-properties': typeof SavedPropertiesRoute
   '/search': typeof SearchRoute
+  '/terms': typeof TermsRoute
   '/agencies/$id': typeof AgenciesIdRoute
   '/agents/$id': typeof AgentsIdRoute
   '/blog/$id': typeof BlogIdRoute
@@ -173,9 +200,12 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/list-property'
     | '/login'
+    | '/my-listings'
+    | '/privacy'
     | '/register'
     | '/saved-properties'
     | '/search'
+    | '/terms'
     | '/agencies/$id'
     | '/agents/$id'
     | '/blog/$id'
@@ -191,9 +221,12 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/list-property'
     | '/login'
+    | '/my-listings'
+    | '/privacy'
     | '/register'
     | '/saved-properties'
     | '/search'
+    | '/terms'
     | '/agencies/$id'
     | '/agents/$id'
     | '/blog/$id'
@@ -209,9 +242,12 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/list-property'
     | '/login'
+    | '/my-listings'
+    | '/privacy'
     | '/register'
     | '/saved-properties'
     | '/search'
+    | '/terms'
     | '/agencies/$id'
     | '/agents/$id'
     | '/blog/$id'
@@ -228,9 +264,12 @@ export interface RootRouteChildren {
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   ListPropertyRoute: typeof ListPropertyRoute
   LoginRoute: typeof LoginRoute
+  MyListingsRoute: typeof MyListingsRoute
+  PrivacyRoute: typeof PrivacyRoute
   RegisterRoute: typeof RegisterRoute
   SavedPropertiesRoute: typeof SavedPropertiesRoute
   SearchRoute: typeof SearchRoute
+  TermsRoute: typeof TermsRoute
   AgenciesIdRoute: typeof AgenciesIdRoute
   AgentsIdRoute: typeof AgentsIdRoute
   EditPropertyIdRoute: typeof EditPropertyIdRoute
@@ -239,6 +278,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/search': {
       id: '/search'
       path: '/search'
@@ -258,6 +304,20 @@ declare module '@tanstack/react-router' {
       path: '/register'
       fullPath: '/register'
       preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/my-listings': {
+      id: '/my-listings'
+      path: '/my-listings'
+      fullPath: '/my-listings'
+      preLoaderRoute: typeof MyListingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -373,9 +433,12 @@ const rootRouteChildren: RootRouteChildren = {
   ForgotPasswordRoute: ForgotPasswordRoute,
   ListPropertyRoute: ListPropertyRoute,
   LoginRoute: LoginRoute,
+  MyListingsRoute: MyListingsRoute,
+  PrivacyRoute: PrivacyRoute,
   RegisterRoute: RegisterRoute,
   SavedPropertiesRoute: SavedPropertiesRoute,
   SearchRoute: SearchRoute,
+  TermsRoute: TermsRoute,
   AgenciesIdRoute: AgenciesIdRoute,
   AgentsIdRoute: AgentsIdRoute,
   EditPropertyIdRoute: EditPropertyIdRoute,
