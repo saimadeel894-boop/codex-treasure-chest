@@ -21,14 +21,15 @@ const footerGroups = [
     ],
   },
   {
-    title: "Resources",
+    title: "Legal",
     links: [
-      { href: "/blog", label: "Market reports" },
-      { href: "/search", label: "Suburb guides" },
-      { href: "/blog", label: "Buyer guides" },
-      { href: "/blog", label: "Rental advice" },
+      { href: "/privacy", label: "Privacy policy" },
+      { href: "/terms", label: "Terms & conditions" },
+      { href: "/my-listings", label: "My listings" },
+      { href: "/saved-properties", label: "Saved properties" },
     ],
   },
+
 ];
 
 export function Footer() {
