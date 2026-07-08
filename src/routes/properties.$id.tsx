@@ -1,5 +1,5 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
-import { Bath, BedDouble, Car, CheckCircle2, MapPin, Ruler } from "lucide-react";
+import { Bath, BedDouble, Car, CheckCircle2, MapPin, Quote, Ruler, Star } from "lucide-react";
 import { ContactAgentForm } from "@/components/ContactAgentForm";
 import { ImageGallery } from "@/components/ImageGallery";
 import { PropertyCard } from "@/components/PropertyCard";
@@ -10,6 +10,52 @@ import {
   getPropertyById,
   properties,
 } from "@/data/marketplace";
+
+type PropertyTestimonial = {
+  author: string;
+  role: string;
+  rating: number;
+  datePublished: string;
+  body: string;
+};
+
+const TESTIMONIAL_TEMPLATES: Array<Omit<PropertyTestimonial, "body"> & { body: (suburb: string) => string }> = [
+  {
+    author: "Amelia Foster",
+    role: "Buyer",
+    rating: 5,
+    datePublished: "2026-04-18",
+    body: (suburb) =>
+      `The inspection was flawlessly organised and the listing photography matched the home perfectly. We felt genuinely guided through every step of buying in ${suburb}.`,
+  },
+  {
+    author: "Liam Bennett",
+    role: "Neighbour",
+    rating: 5,
+    datePublished: "2026-03-02",
+    body: (suburb) =>
+      `Beautifully presented home in a quiet pocket of ${suburb}. The Nestoria team ran a considered, calm campaign — refreshing compared with other portals.`,
+  },
+  {
+    author: "Priya Anand",
+    role: "Investor",
+    rating: 4.5,
+    datePublished: "2026-02-14",
+    body: (suburb) =>
+      `Data on the ${suburb} listing was transparent — rental yield, comparable sales and inspection interest all clearly reported. Made due diligence straightforward.`,
+  },
+];
+
+function buildTestimonials(suburb: string): PropertyTestimonial[] {
+  return TESTIMONIAL_TEMPLATES.map((t) => ({
+    author: t.author,
+    role: t.role,
+    rating: t.rating,
+    datePublished: t.datePublished,
+    body: t.body(suburb),
+  }));
+}
+
 
 export const Route = createFileRoute("/properties/$id")({
   head: ({ params }) => {
