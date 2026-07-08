@@ -7,7 +7,62 @@ import { getAgencyForAgent, getAgentById, getPropertiesForAgent } from "@/data/m
 export const Route = createFileRoute("/agents/$id")({
   head: ({ params }) => {
     const agent = getAgentById(params.id);
-    return { meta: [{ title: agent ? `${agent.name} | Agent | Nestoria` : "Agent" }] };
+    if (!agent) return { meta: [{ title: "Agent" }] };
+    const agency = getAgencyForAgent(agent.id);
+    const path = `/agents/${params.id}`;
+    const description = agent.bio?.slice(0, 155) ?? `${agent.name} — ${agent.title}`;
+    return {
+      meta: [
+        { title: `${agent.name} | Agent | Nestoria` },
+        { name: "description", content: description },
+        { property: "og:title", content: `${agent.name} — ${agent.title}` },
+        { property: "og:description", content: description },
+        { property: "og:type", content: "profile" },
+        { property: "og:url", content: path },
+        { property: "og:image", content: agent.image },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:image", content: agent.image },
+      ],
+      links: [{ rel: "canonical", href: path }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "RealEstateAgent",
+            name: agent.name,
+            jobTitle: agent.title,
+            description: agent.bio,
+            url: path,
+            image: agent.image,
+            telephone: agent.phone,
+            email: agent.email,
+            knowsAbout: agent.specialities,
+            worksFor: agency
+              ? {
+                  "@type": "RealEstateAgent",
+                  name: agency.name,
+                  url: `/agencies/${agency.id}`,
+                }
+              : undefined,
+            areaServed: agency
+              ? { "@type": "Place", name: `${agency.suburb}, ${agency.state}, Australia` }
+              : { "@type": "Country", name: "Australia" },
+            aggregateRating: {
+              "@type": "AggregateRating",
+              ratingValue: agent.rating,
+              bestRating: 5,
+              worstRating: 1,
+              reviewCount: agent.soldLastYear,
+            },
+            makesOffer: {
+              "@type": "Offer",
+              description: `${agent.activeListings} active listings, ${agent.soldLastYear} properties sold in the last year.`,
+            },
+          }),
+        },
+      ],
+    };
   },
   loader: ({ params }) => {
     const agent = getAgentById(params.id);
