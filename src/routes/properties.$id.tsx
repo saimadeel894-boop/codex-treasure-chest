@@ -1,5 +1,5 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
-import { Bath, BedDouble, Car, CheckCircle2, MapPin, Ruler } from "lucide-react";
+import { Bath, BedDouble, Car, CheckCircle2, MapPin, Quote, Ruler, Star } from "lucide-react";
 import { ContactAgentForm } from "@/components/ContactAgentForm";
 import { ImageGallery } from "@/components/ImageGallery";
 import { PropertyCard } from "@/components/PropertyCard";
@@ -11,13 +11,59 @@ import {
   properties,
 } from "@/data/marketplace";
 
+type PropertyTestimonial = {
+  author: string;
+  role: string;
+  rating: number;
+  datePublished: string;
+  body: string;
+};
+
+const TESTIMONIAL_TEMPLATES: Array<Omit<PropertyTestimonial, "body"> & { body: (suburb: string) => string }> = [
+  {
+    author: "Amelia Foster",
+    role: "Buyer",
+    rating: 5,
+    datePublished: "2026-04-18",
+    body: (suburb) =>
+      `The inspection was flawlessly organised and the listing photography matched the home perfectly. We felt genuinely guided through every step of buying in ${suburb}.`,
+  },
+  {
+    author: "Liam Bennett",
+    role: "Neighbour",
+    rating: 5,
+    datePublished: "2026-03-02",
+    body: (suburb) =>
+      `Beautifully presented home in a quiet pocket of ${suburb}. The Nestoria team ran a considered, calm campaign — refreshing compared with other portals.`,
+  },
+  {
+    author: "Priya Anand",
+    role: "Investor",
+    rating: 4.5,
+    datePublished: "2026-02-14",
+    body: (suburb) =>
+      `Data on the ${suburb} listing was transparent — rental yield, comparable sales and inspection interest all clearly reported. Made due diligence straightforward.`,
+  },
+];
+
+function buildTestimonials(suburb: string): PropertyTestimonial[] {
+  return TESTIMONIAL_TEMPLATES.map((t) => ({
+    author: t.author,
+    role: t.role,
+    rating: t.rating,
+    datePublished: t.datePublished,
+    body: t.body(suburb),
+  }));
+}
+
+
 export const Route = createFileRoute("/properties/$id")({
   head: ({ params }) => {
     const property = getPropertyById(params.id);
     if (!property) {
       return { meta: [{ title: "Property not found" }] };
     }
-    const agent = getAgentForProperty(property);
+    const testimonials = buildTestimonials(property.suburb);
     const path = `/properties/${params.id}`;
     const description = property.description?.slice(0, 155) ?? "Property details";
     return {
@@ -64,25 +110,30 @@ export const Route = createFileRoute("/properties/$id")({
             },
             aggregateRating: {
               "@type": "AggregateRating",
-              ratingValue: agent?.rating ?? 4.8,
+              ratingValue: (
+                testimonials.reduce((s, t) => s + t.rating, 0) / testimonials.length
+              ).toFixed(2),
               bestRating: 5,
               worstRating: 1,
-              reviewCount: agent?.soldLastYear ?? 42,
+              reviewCount: testimonials.length,
             },
-            review: agent
-              ? [
-                  {
-                    "@type": "Review",
-                    reviewRating: {
-                      "@type": "Rating",
-                      ratingValue: agent.rating,
-                      bestRating: 5,
-                    },
-                    author: { "@type": "Person", name: "Verified Nestoria buyer" },
-                    reviewBody: `Working with ${agent.name} on ${property.suburb} listings was seamless — professional presentation, honest guidance, and swift communication throughout.`,
-                  },
-                ]
-              : undefined,
+            review: testimonials.map((t) => ({
+              "@type": "Review",
+              itemReviewed: {
+                "@type": "Residence",
+                name: property.title,
+                url: path,
+              },
+              reviewRating: {
+                "@type": "Rating",
+                ratingValue: t.rating,
+                bestRating: 5,
+                worstRating: 1,
+              },
+              author: { "@type": "Person", name: t.author },
+              datePublished: t.datePublished,
+              reviewBody: t.body,
+            })),
           }),
         },
         {
@@ -189,6 +240,7 @@ function PropertyPage() {
   const agent = getAgentForProperty(property);
   const agency = getAgencyForProperty(property);
   const similar = properties.filter((p) => p.id !== property.id && p.state === property.state).slice(0, 3);
+  const testimonials = buildTestimonials(property.suburb);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
@@ -268,6 +320,52 @@ function PropertyPage() {
           <ContactAgentForm agent={agent} property={property} />
         </aside>
       </div>
+
+      <section className="mt-16">
+        <div className="flex items-end justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold text-slate-950">Reviews</h2>
+            <p className="mt-1 text-sm text-slate-600">
+              What buyers and neighbours are saying about listings in {property.suburb}.
+            </p>
+          </div>
+          <p className="text-sm font-semibold text-slate-700">
+            {(
+              testimonials.reduce((s, t) => s + t.rating, 0) / testimonials.length
+            ).toFixed(1)}{" "}
+            / 5 · {testimonials.length} reviews
+          </p>
+        </div>
+        <div className="mt-6 grid gap-4 md:grid-cols-3">
+          {testimonials.map((t) => (
+            <article
+              key={t.author}
+              className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm"
+            >
+              <Quote size={18} className="text-emerald-700" aria-hidden="true" />
+              <p className="mt-3 text-sm leading-6 text-slate-700">{t.body}</p>
+              <div className="mt-4 flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-bold text-slate-950">{t.author}</p>
+                  <p className="text-xs text-slate-500">
+                    {t.role} ·{" "}
+                    <time dateTime={t.datePublished}>
+                      {new Date(t.datePublished).toLocaleDateString("en-AU", {
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </time>
+                  </p>
+                </div>
+                <span className="flex items-center gap-1 text-sm font-semibold text-amber-600">
+                  <Star size={14} className="fill-amber-400 text-amber-400" aria-hidden="true" />
+                  {t.rating.toFixed(1)}
+                </span>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
 
       {similar.length > 0 && (
         <section className="mt-16">
