@@ -155,6 +155,7 @@ export type Database = {
           id: string
           property_id: string
           sort_order: number
+          storage_path: string | null
           url: string
         }
         Insert: {
@@ -163,6 +164,7 @@ export type Database = {
           id?: string
           property_id: string
           sort_order?: number
+          storage_path?: string | null
           url: string
         }
         Update: {
@@ -171,6 +173,7 @@ export type Database = {
           id?: string
           property_id?: string
           sort_order?: number
+          storage_path?: string | null
           url?: string
         }
         Relationships: [
