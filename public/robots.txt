@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+Disallow: /dashboard
+Disallow: /my-listings
+Disallow: /saved-properties
+Disallow: /login
+Disallow: /register
+Disallow: /forgot-password
+Disallow: /edit-property/

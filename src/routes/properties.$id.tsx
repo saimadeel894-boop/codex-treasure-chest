@@ -14,12 +14,54 @@ import {
 export const Route = createFileRoute("/properties/$id")({
   head: ({ params }) => {
     const property = getPropertyById(params.id);
+    if (!property) {
+      return { meta: [{ title: "Property not found" }] };
+    }
+    const path = `/properties/${params.id}`;
+    const description = property.description?.slice(0, 155) ?? "Property details";
     return {
       meta: [
-        { title: property ? `${property.title} | Nestoria` : "Property not found" },
+        { title: `${property.title} | Nestoria` },
+        { name: "description", content: description },
+        { property: "og:title", content: property.title },
+        { property: "og:description", content: description },
+        { property: "og:type", content: "product" },
+        { property: "og:url", content: path },
+        { property: "og:image", content: property.images[0] },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:image", content: property.images[0] },
+      ],
+      links: [{ rel: "canonical", href: path }],
+      scripts: [
         {
-          name: "description",
-          content: property?.description?.slice(0, 150) ?? "Property details",
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": ["Product", "Residence"],
+            name: property.title,
+            description: property.description,
+            image: property.images,
+            url: path,
+            address: {
+              "@type": "PostalAddress",
+              streetAddress: property.address,
+              addressLocality: property.suburb,
+              addressRegion: property.state,
+              postalCode: property.postcode,
+              addressCountry: "AU",
+            },
+            numberOfRooms: property.bedrooms,
+            numberOfBathroomsTotal: property.bathrooms,
+            floorSize: property.landSize,
+            offers: {
+              "@type": "Offer",
+              price: property.price,
+              priceCurrency: "AUD",
+              availability: "https://schema.org/InStock",
+              category:
+                property.mode === "Rent" ? "https://schema.org/RentAction" : "https://schema.org/SellAction",
+            },
+          }),
         },
       ],
     };
