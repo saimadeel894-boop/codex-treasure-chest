@@ -21,19 +21,23 @@ export const Route = createFileRoute("/search")({
           "@context": "https://schema.org",
           "@type": "SearchResultsPage",
           name: "Search properties",
-          url: "/search",
-          isPartOf: { "@id": "/#website" },
+          url: "https://project--a0d96297-61d4-4523-ae1a-a95bf868e3f0.lovable.app/search",
+          isPartOf: {
+            "@id": "https://project--a0d96297-61d4-4523-ae1a-a95bf868e3f0.lovable.app/#website",
+          },
           potentialAction: {
             "@type": "SearchAction",
             target: {
               "@type": "EntryPoint",
-              urlTemplate: "/search?location={search_term_string}",
+              urlTemplate:
+                "https://project--a0d96297-61d4-4523-ae1a-a95bf868e3f0.lovable.app/search?location={search_term_string}",
             },
             "query-input": "required name=search_term_string",
           },
         }),
       },
     ],
+
   }),
   component: SearchPage,
 });
