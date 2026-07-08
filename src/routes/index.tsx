@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useRef } from "react";
 import { ArrowRight, Building2, MapPin, ShieldCheck, TrendingUp } from "lucide-react";
 
 import { Link } from "@/components/compat/Link";
@@ -55,6 +56,33 @@ const featureHighlights = [
 function Home() {
   const featuredProperties = properties.slice(0, 3);
   const latestProperties = properties.slice(3);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || typeof IntersectionObserver === "undefined") return;
+
+    const prefersReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) {
+      video.pause();
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          void video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      },
+      { threshold: 0.15 },
+    );
+
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, []);
+
 
   return (
     <>
@@ -68,6 +96,7 @@ function Home() {
           className="absolute inset-0 h-full w-full object-cover"
         />
         <video
+          ref={videoRef}
           className="absolute inset-0 h-full w-full object-cover"
           autoPlay
           muted
