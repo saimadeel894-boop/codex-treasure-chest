@@ -86,6 +86,65 @@ export const Route = createFileRoute("/properties/$id")({
             ],
           }),
         },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: [
+              {
+                "@type": "Question",
+                name: `What is the price of ${property.title}?`,
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: `${property.title} is listed for ${property.priceLabel} (${property.mode === "Rent" ? "for rent" : "for sale"}).`,
+                },
+              },
+              {
+                "@type": "Question",
+                name: `Where is ${property.title} located?`,
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: `${property.address}, ${property.suburb}, ${property.state} ${property.postcode}, Australia.`,
+                },
+              },
+              {
+                "@type": "Question",
+                name: "How many bedrooms and bathrooms does this property have?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: `This ${property.propertyType.toLowerCase()} has ${property.bedrooms} bedroom${property.bedrooms === 1 ? "" : "s"}, ${property.bathrooms} bathroom${property.bathrooms === 1 ? "" : "s"}, and ${property.parking} parking space${property.parking === 1 ? "" : "s"}.`,
+                },
+              },
+              {
+                "@type": "Question",
+                name: "What is the land size?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: `The land size is ${property.landSize}.`,
+                },
+              },
+              {
+                "@type": "Question",
+                name: "What are the key features of this property?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: property.features.join(", ") + ".",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "When can I inspect this property?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: property.inspectionTimes.length
+                    ? `Scheduled inspection times: ${property.inspectionTimes.join("; ")}.`
+                    : "Contact the listing agent to arrange a private inspection.",
+                },
+              },
+            ],
+          }),
+        },
       ],
     };
   },
