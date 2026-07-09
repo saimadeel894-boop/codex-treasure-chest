@@ -98,6 +98,53 @@
   --shadow-luxury: 0 30px 80px -30px oklch(0.18 0.012 60 / 0.25);
   --gradient-warm: linear-gradient(135deg, oklch(0.98 0.02 60), oklch(0.94 0.05 55));
   --gradient-charcoal: linear-gradient(180deg, oklch(0.22 0.012 60), oklch(0.12 0.01 60));
+
+  /* ============================================================
+     Fluid Typography Scale
+     Uses clamp(min, preferred, max) so a single token stays
+     consistent from 320px mobile → 1536px desktop without
+     per-breakpoint overrides. Pair size + line-height + weight.
+     ============================================================ */
+  --text-eyebrow-size: 0.75rem;         /* 12px */
+  --text-eyebrow-lh: 1.4;
+  --text-eyebrow-weight: 500;
+  --text-eyebrow-tracking: 0.18em;
+
+  --text-caption-size: 0.8125rem;       /* 13px */
+  --text-caption-lh: 1.5;
+  --text-caption-weight: 500;
+
+  --text-body-size: clamp(0.9375rem, 0.9rem + 0.15vw, 1.0625rem);
+  --text-body-lh: 1.65;
+  --text-body-weight: 400;
+
+  --text-lead-size: clamp(1.0625rem, 0.95rem + 0.5vw, 1.375rem);
+  --text-lead-lh: 1.55;
+  --text-lead-weight: 400;
+
+  --text-tile-size: clamp(1.125rem, 0.95rem + 0.9vw, 1.75rem);
+  --text-tile-lh: 1.2;
+  --text-tile-weight: 500;
+
+  --text-h3-size: clamp(1.375rem, 1.1rem + 1.2vw, 2.25rem);
+  --text-h3-lh: 1.15;
+  --text-h3-weight: 500;
+
+  --text-h2-size: clamp(1.875rem, 1.3rem + 2.5vw, 3.75rem);
+  --text-h2-lh: 1.05;
+  --text-h2-weight: 500;
+
+  --text-h1-size: clamp(2.375rem, 1.4rem + 4.5vw, 5rem);
+  --text-h1-lh: 1;
+  --text-h1-weight: 500;
+
+  --text-display-size: clamp(2.75rem, 1.4rem + 6.5vw, 7rem);
+  --text-display-lh: 0.95;
+  --text-display-weight: 500;
+
+  --text-stat-size: clamp(2.25rem, 1.4rem + 3.6vw, 4rem);
+  --text-stat-lh: 1;
+  --text-stat-weight: 500;
 }
 
 .dark {
