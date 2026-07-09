@@ -38,14 +38,15 @@ export function Navbar() {
       <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2.5" aria-label="Nestoria Australia home">
           <span className="flex size-10 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-soft">
-            <span className="font-serif text-xl leading-none">N</span>
+            <span className="font-serif text-tile leading-none">N</span>
           </span>
           <span className="leading-tight">
-            <span className="block font-serif text-xl text-charcoal">Nestoria</span>
-            <span className="text-[10px] font-medium uppercase tracking-[0.28em] text-primary">
+            <span className="block font-serif text-tile text-charcoal">Nestoria</span>
+            <span className="text-eyebrow text-primary">
               Australia
             </span>
           </span>
+
         </Link>
 
         <div className="hidden items-center gap-1 lg:flex">
