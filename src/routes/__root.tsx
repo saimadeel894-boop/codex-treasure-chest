@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { BackToHome } from "@/components/BackToHome";
 
 
 
@@ -259,6 +260,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <Navbar />
+      <BackToHome />
       <main className="flex-1">
         <Outlet />
       </main>
