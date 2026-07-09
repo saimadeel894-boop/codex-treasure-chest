@@ -183,9 +183,9 @@ function AnimatedStat({ value, suffix, label }: (typeof stats)[number]) {
 }
 
 function Home() {
-  const featured = properties.slice(0, 3);
+  const bento = properties.slice(0, 5);
   const showcase = properties[0];
-  const latest = properties.slice(3, 6);
+  const latest = properties.slice(5, 8);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoLoaded, setVideoLoaded] = useState(false);
 
