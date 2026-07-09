@@ -493,7 +493,7 @@ function Home() {
             {bento[3] && (
               <Link
                 href={`/properties/${bento[3].id}`}
-                className="group relative overflow-hidden rounded-3xl border border-white/5 bg-[#1a1a1a]"
+                className="group relative col-span-1 overflow-hidden rounded-3xl border border-white/5 bg-[#1a1a1a] sm:col-span-2 md:col-span-3"
               >
                 <Image
                   src={bento[3].images[0]}
