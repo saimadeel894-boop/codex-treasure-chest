@@ -452,7 +452,7 @@ function Home() {
             )}
 
             {/* Stat tile */}
-            <div className="relative flex flex-col items-center justify-center rounded-3xl border border-primary/25 bg-[#1a1a1a] p-8 text-center">
+            <div className="relative col-span-1 flex flex-col items-center justify-center rounded-3xl border border-primary/25 bg-[#1a1a1a] p-6 text-center sm:p-8 md:col-span-1 md:row-span-1">
               <span className="font-serif text-5xl italic text-primary sm:text-6xl">$2.4B</span>
               <p className="mt-3 text-[10px] uppercase tracking-[0.3em] text-background/60">
                 Transactions closed
