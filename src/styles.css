@@ -199,9 +199,69 @@
   box-shadow: 0 12px 40px -18px oklch(0.18 0.012 60 / 0.18);
 }
 
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to { opacity: 1; transform: translateY(0); }
+/* ============================================================
+   Typography scale utilities
+   Apply a single class to get size + line-height + weight that
+   scale fluidly and stay in hierarchy across breakpoints.
+   ============================================================ */
+@utility text-eyebrow {
+  font-size: var(--text-eyebrow-size);
+  line-height: var(--text-eyebrow-lh);
+  font-weight: var(--text-eyebrow-weight);
+  letter-spacing: var(--text-eyebrow-tracking);
+  text-transform: uppercase;
+}
+@utility text-caption {
+  font-size: var(--text-caption-size);
+  line-height: var(--text-caption-lh);
+  font-weight: var(--text-caption-weight);
+}
+@utility text-body {
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-lh);
+  font-weight: var(--text-body-weight);
+}
+@utility text-lead {
+  font-size: var(--text-lead-size);
+  line-height: var(--text-lead-lh);
+  font-weight: var(--text-lead-weight);
+}
+@utility text-tile {
+  font-size: var(--text-tile-size);
+  line-height: var(--text-tile-lh);
+  font-weight: var(--text-tile-weight);
+  letter-spacing: -0.01em;
+}
+@utility text-h3 {
+  font-size: var(--text-h3-size);
+  line-height: var(--text-h3-lh);
+  font-weight: var(--text-h3-weight);
+  letter-spacing: -0.015em;
+}
+@utility text-h2 {
+  font-size: var(--text-h2-size);
+  line-height: var(--text-h2-lh);
+  font-weight: var(--text-h2-weight);
+  letter-spacing: -0.02em;
+}
+@utility text-h1 {
+  font-size: var(--text-h1-size);
+  line-height: var(--text-h1-lh);
+  font-weight: var(--text-h1-weight);
+  letter-spacing: -0.025em;
+}
+@utility text-display {
+  font-size: var(--text-display-size);
+  line-height: var(--text-display-lh);
+  font-weight: var(--text-display-weight);
+  letter-spacing: -0.035em;
+}
+@utility text-stat {
+  font-size: var(--text-stat-size);
+  line-height: var(--text-stat-lh);
+  font-weight: var(--text-stat-weight);
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
 }
 
 @keyframes fadeIn {
