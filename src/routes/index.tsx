@@ -390,41 +390,43 @@ function Home() {
                 className="object-cover opacity-80 transition duration-1000 group-hover:scale-105 group-hover:opacity-100"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-[#0d0d0d]/30 to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 p-8">
+              <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6 md:p-8">
                 <span className="inline-block rounded-full border border-primary/40 bg-black/40 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-primary backdrop-blur">
                   Signature listing
                 </span>
-                <h3 className="mt-5 font-serif text-h2 text-background">
+                <h3 className="mt-4 font-serif text-h2 text-background text-balance line-clamp-2 sm:mt-5">
                   {bento[0].title}
                 </h3>
-                <div className="mt-4 flex flex-wrap items-end gap-x-8 gap-y-2 text-sm text-background/80">
-                  <div>
+                <div className="mt-3 grid grid-cols-2 gap-x-6 gap-y-2 text-sm text-background/80 sm:mt-4 sm:flex sm:flex-wrap sm:items-end sm:gap-x-8">
+                  <div className="min-w-0">
                     <p className="text-[10px] uppercase tracking-widest text-background/50">Location</p>
-                    <p className="mt-1 text-background">{bento[0].suburb}, {bento[0].state}</p>
+                    <p className="mt-1 truncate text-background">{bento[0].suburb}, {bento[0].state}</p>
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-[10px] uppercase tracking-widest text-background/50">Guide</p>
-                    <p className="mt-1 font-serif text-tile text-primary">{bento[0].priceLabel}</p>
+                    <p className="mt-1 truncate font-serif text-tile text-primary">{bento[0].priceLabel}</p>
                   </div>
                 </div>
               </div>
+
             </Link>
 
             {/* Gold CTA tile */}
             <Link
               href="/search"
-              className="group relative col-span-1 flex flex-col justify-between overflow-hidden rounded-3xl bg-primary p-6 text-primary-foreground transition hover:-translate-y-1 sm:col-span-2 sm:p-8 md:col-span-2 md:row-span-1"
+              className="group relative col-span-1 flex flex-col justify-between gap-6 overflow-hidden rounded-3xl bg-primary p-5 text-primary-foreground transition hover:-translate-y-1 sm:col-span-2 sm:p-7 md:col-span-2 md:row-span-1 md:p-8"
             >
               <div className="flex justify-end">
                 <ArrowUpRight size={28} className="transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1" aria-hidden="true" />
               </div>
-              <div>
+              <div className="min-w-0">
                 <p className="text-[10px] font-semibold uppercase tracking-[0.28em]">Concierge</p>
-                <h3 className="mt-3 font-serif text-h3">
+                <h3 className="mt-2 font-serif text-h3 text-balance sm:mt-3">
                   Start your <em className="italic">private</em> search.
                 </h3>
               </div>
             </Link>
+
 
             {/* Property tile 2 */}
             {bento[1] && (
@@ -440,11 +442,11 @@ function Home() {
                   className="object-cover opacity-70 transition duration-700 group-hover:scale-110 group-hover:opacity-90"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-5">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-primary">
+                <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5 md:p-6">
+                  <p className="min-w-0 truncate text-[10px] font-semibold uppercase tracking-[0.24em] text-primary">
                     {bento[1].suburb}, {bento[1].state}
                   </p>
-                  <p className="mt-1 font-serif text-tile text-background line-clamp-2">
+                  <p className="mt-1.5 font-serif text-tile leading-[1.15] text-background text-balance line-clamp-2">
                     {bento[1].title}
                   </p>
                 </div>
@@ -452,12 +454,12 @@ function Home() {
             )}
 
             {/* Stat tile */}
-            <div className="relative col-span-1 flex flex-col items-center justify-center rounded-3xl border border-primary/25 bg-[#1a1a1a] p-6 text-center sm:p-8 md:col-span-1 md:row-span-1">
+            <div className="relative col-span-1 flex flex-col items-center justify-center rounded-3xl border border-primary/25 bg-[#1a1a1a] p-5 text-center sm:p-7 md:col-span-1 md:row-span-1 md:p-8">
               <span className="font-serif text-stat italic text-primary">$2.4B</span>
-              <p className="mt-3 text-[10px] uppercase tracking-[0.3em] text-background/60">
+              <p className="mt-2 max-w-[14ch] text-[10px] leading-snug uppercase tracking-[0.3em] text-background/60 sm:mt-3">
                 Transactions closed
               </p>
-              <div className="mt-4 flex -space-x-2">
+              <div className="mt-3 flex -space-x-2 sm:mt-4">
                 <span className="size-6 rounded-full border border-[#0d0d0d] bg-primary/30" />
                 <span className="size-6 rounded-full border border-[#0d0d0d] bg-primary/50" />
                 <span className="size-6 rounded-full border border-[#0d0d0d] bg-primary" />
@@ -478,11 +480,11 @@ function Home() {
                   className="object-cover opacity-70 transition duration-700 group-hover:scale-110 group-hover:opacity-90"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-5">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-primary">
+                <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5 md:p-6">
+                  <p className="min-w-0 truncate text-[10px] font-semibold uppercase tracking-[0.24em] text-primary">
                     {bento[2].suburb}, {bento[2].state}
                   </p>
-                  <p className="mt-1 font-serif text-tile text-background line-clamp-2">
+                  <p className="mt-1.5 font-serif text-tile leading-[1.15] text-background text-balance line-clamp-2">
                     {bento[2].title}
                   </p>
                 </div>
@@ -503,11 +505,11 @@ function Home() {
                   className="object-cover opacity-70 transition duration-700 group-hover:scale-110 group-hover:opacity-90"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-5">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-primary">
+                <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5 md:p-6">
+                  <p className="min-w-0 truncate text-[10px] font-semibold uppercase tracking-[0.24em] text-primary">
                     {bento[3].suburb}, {bento[3].state}
                   </p>
-                  <p className="mt-1 font-serif text-tile text-background line-clamp-2">
+                  <p className="mt-1.5 font-serif text-tile leading-[1.15] text-background text-balance line-clamp-2">
                     {bento[3].title}
                   </p>
                 </div>
