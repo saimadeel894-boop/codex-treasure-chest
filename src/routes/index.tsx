@@ -413,7 +413,7 @@ function Home() {
             {/* Gold CTA tile */}
             <Link
               href="/search"
-              className="group relative flex flex-col justify-between overflow-hidden rounded-3xl bg-primary p-8 text-primary-foreground transition hover:-translate-y-1"
+              className="group relative col-span-1 flex flex-col justify-between overflow-hidden rounded-3xl bg-primary p-6 text-primary-foreground transition hover:-translate-y-1 sm:col-span-2 sm:p-8 md:col-span-2 md:row-span-1"
             >
               <div className="flex justify-end">
                 <ArrowUpRight size={28} className="transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1" aria-hidden="true" />
