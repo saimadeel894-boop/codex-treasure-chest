@@ -376,11 +376,11 @@ function Home() {
             </Link>
           </div>
 
-          <div className="mt-12 grid auto-rows-[220px] grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:auto-rows-[240px] md:grid-cols-4 md:grid-rows-3 lg:auto-rows-[260px]">
+          <div className="mt-12 grid auto-rows-[minmax(240px,1fr)] grid-cols-1 gap-3 sm:auto-rows-[220px] sm:grid-cols-2 sm:gap-4 md:auto-rows-[240px] md:grid-cols-4 md:grid-rows-3 lg:auto-rows-[260px]">
             {/* Hero tile — large */}
             <Link
               href={`/properties/${bento[0].id}`}
-              className="group relative col-span-1 row-span-2 overflow-hidden rounded-3xl border border-primary/20 bg-[#1a1a1a] sm:col-span-2 md:col-span-2 md:row-span-2"
+              className="group relative col-span-1 overflow-hidden rounded-3xl border border-primary/20 bg-[#1a1a1a] sm:col-span-2 sm:row-span-2 md:col-span-2 md:row-span-2"
             >
               <Image
                 src={bento[0].images[0]}
