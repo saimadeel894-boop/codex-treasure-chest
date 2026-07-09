@@ -22,15 +22,15 @@ function MyListingsPage() {
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-primary">Your portfolio</p>
-          <h1 className="mt-2 font-serif text-4xl text-charcoal">My listings</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
+          <p className="text-eyebrow text-primary">Your portfolio</p>
+          <h1 className="mt-2 font-serif text-h2 text-charcoal">My listings</h1>
+          <p className="mt-2 text-caption text-muted-foreground">
             {mine.length} active listing{mine.length === 1 ? "" : "s"} across your account.
           </p>
         </div>
         <Link
           href="/list-property"
-          className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-soft transition hover:bg-primary/90"
+          className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-caption font-semibold text-primary-foreground shadow-soft transition hover:bg-primary/90"
         >
           <Plus size={16} aria-hidden="true" />
           Add new listing
@@ -39,13 +39,13 @@ function MyListingsPage() {
 
       {mine.length === 0 ? (
         <div className="mt-10 rounded-3xl border border-dashed border-border/70 bg-surface p-16 text-center">
-          <h2 className="font-serif text-2xl text-charcoal">No listings yet</h2>
-          <p className="mt-2 text-sm text-muted-foreground">
+          <h2 className="font-serif text-h3 text-charcoal">No listings yet</h2>
+          <p className="mt-2 text-caption text-muted-foreground">
             Start showcasing your property to thousands of buyers and renters across Australia.
           </p>
           <Link
             href="/list-property"
-            className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-caption font-semibold text-primary-foreground"
           >
             <Plus size={16} aria-hidden="true" />
             List a property
@@ -59,13 +59,13 @@ function MyListingsPage() {
               <div className="flex gap-2">
                 <Link
                   href={`/edit-property/${p.id}`}
-                  className="flex-1 rounded-full border border-border px-4 py-2 text-center text-xs font-semibold text-charcoal transition hover:border-primary hover:text-primary"
+                  className="flex-1 rounded-full border border-border px-4 py-2 text-center text-eyebrow text-charcoal transition hover:border-primary hover:text-primary"
                 >
                   Edit
                 </Link>
                 <Link
                   href={`/properties/${p.id}`}
-                  className="flex-1 rounded-full bg-charcoal px-4 py-2 text-center text-xs font-semibold text-background transition hover:bg-primary"
+                  className="flex-1 rounded-full bg-charcoal px-4 py-2 text-center text-eyebrow text-background transition hover:bg-primary"
                 >
                   View public listing
                 </Link>

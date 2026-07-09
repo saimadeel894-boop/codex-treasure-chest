@@ -77,16 +77,17 @@ function SearchPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <header className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-950">Search properties</h1>
-        <p className="mt-2 text-slate-600">{filtered.length} results found</p>
+        <p className="text-eyebrow text-primary">Marketplace</p>
+        <h1 className="mt-2 font-serif text-h2 text-charcoal">Search properties</h1>
+        <p className="mt-2 text-caption text-muted-foreground">{filtered.length} results found</p>
       </header>
       <div className="grid gap-8 lg:grid-cols-[320px_1fr]">
         <FilterComponent />
         <div>
           {filtered.length === 0 ? (
-            <div className="rounded-lg border border-dashed border-slate-300 bg-white p-12 text-center">
-              <h2 className="text-lg font-bold text-slate-950">No properties match your filters</h2>
-              <p className="mt-2 text-sm text-slate-600">Try adjusting or resetting your filters.</p>
+            <div className="rounded-3xl border border-dashed border-border/70 bg-surface p-12 text-center">
+              <h2 className="font-serif text-h3 text-charcoal">No properties match your filters</h2>
+              <p className="mt-2 text-caption text-muted-foreground">Try adjusting or resetting your filters.</p>
             </div>
           ) : (
             <div className="grid gap-6 md:grid-cols-2">

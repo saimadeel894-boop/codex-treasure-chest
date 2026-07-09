@@ -63,16 +63,16 @@ function SavedProperties() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <header className="mb-8 flex items-center gap-3">
-        <Heart className="text-rose-500" aria-hidden="true" />
-        <h1 className="text-3xl font-bold text-slate-950">Saved properties</h1>
+        <Heart className="text-primary" aria-hidden="true" />
+        <h1 className="font-serif text-h2 text-charcoal">Saved properties</h1>
         {saved.length > 0 && (
-          <span className="text-sm text-slate-600">({saved.length})</span>
+          <span className="text-caption text-muted-foreground">({saved.length})</span>
         )}
       </header>
       {saved.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-slate-300 bg-white p-12 text-center">
-          <p className="text-slate-600">You haven't saved any properties yet.</p>
-          <Link href="/search" className="mt-4 inline-block font-bold text-emerald-800 hover:text-emerald-900">
+        <div className="rounded-3xl border border-dashed border-border/70 bg-surface p-12 text-center">
+          <p className="text-caption text-muted-foreground">You haven't saved any properties yet.</p>
+          <Link href="/search" className="mt-4 inline-block text-caption font-semibold text-primary hover:underline">
             Browse properties →
           </Link>
         </div>

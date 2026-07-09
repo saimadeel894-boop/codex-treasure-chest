@@ -105,7 +105,7 @@ export function QuickViewModal({ property, open, onClose }: QuickViewModalProps)
             </span>
             <span className="flex flex-col items-start gap-1">
               <Ruler size={16} className="text-primary" aria-hidden="true" />
-              <span className="text-xs">{property.landSize}</span>
+              <span className="text-eyebrow">{property.landSize}</span>
             </span>
           </div>
 
