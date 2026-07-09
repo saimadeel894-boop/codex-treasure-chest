@@ -268,12 +268,12 @@ function Home() {
               <Sparkles size={13} className="text-primary" aria-hidden="true" />
               Australia&rsquo;s premium property marketplace
             </p>
-            <h1 className="font-serif text-5xl leading-[1.02] tracking-tight text-background text-balance sm:text-7xl lg:text-8xl">
+            <h1 className="font-serif text-[2.5rem] leading-[1.05] tracking-tight text-background text-balance sm:text-6xl md:text-7xl lg:text-8xl">
               Homes with a{" "}
               <em className="not-italic text-primary">quiet</em> sense
               <br className="hidden sm:block" /> of <em className="italic">occasion.</em>
             </h1>
-            <p className="mx-auto mt-8 max-w-2xl text-base leading-8 text-background/85 sm:text-lg">
+            <p className="mx-auto mt-6 max-w-2xl text-sm leading-7 text-background/85 sm:mt-8 sm:text-base sm:leading-8 md:text-lg">
               A curated marketplace for buying, renting, and listing Australia&rsquo;s most
               considered residences &mdash; from harbourside estates to coastal retreats.
             </p>
