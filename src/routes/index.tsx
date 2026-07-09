@@ -356,7 +356,7 @@ function Home() {
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-primary">
                 — The Noir Collection
               </p>
-              <h2 className="mt-4 font-serif text-4xl leading-tight text-background sm:text-5xl">
+              <h2 className="mt-4 font-serif text-3xl leading-tight text-background sm:text-4xl md:text-5xl lg:text-6xl">
                 Australia&rsquo;s most coveted residences, curated this week.
               </h2>
               <p className="mt-4 text-base leading-7 text-background/70">
@@ -394,7 +394,7 @@ function Home() {
                 <span className="inline-block rounded-full border border-primary/40 bg-black/40 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-primary backdrop-blur">
                   Signature listing
                 </span>
-                <h3 className="mt-5 font-serif text-4xl leading-tight text-background sm:text-5xl">
+                <h3 className="mt-5 font-serif text-3xl leading-tight text-background sm:text-4xl md:text-5xl">
                   {bento[0].title}
                 </h3>
                 <div className="mt-4 flex flex-wrap items-end gap-x-8 gap-y-2 text-sm text-background/80">
@@ -404,7 +404,7 @@ function Home() {
                   </div>
                   <div>
                     <p className="text-[10px] uppercase tracking-widest text-background/50">Guide</p>
-                    <p className="mt-1 font-serif text-lg text-primary">{bento[0].priceLabel}</p>
+                    <p className="mt-1 font-serif text-base text-primary sm:text-lg md:text-xl">{bento[0].priceLabel}</p>
                   </div>
                 </div>
               </div>
@@ -420,7 +420,7 @@ function Home() {
               </div>
               <div>
                 <p className="text-[10px] font-semibold uppercase tracking-[0.28em]">Concierge</p>
-                <h3 className="mt-3 font-serif text-3xl leading-[0.95]">
+                <h3 className="mt-3 font-serif text-2xl leading-[1] sm:text-3xl md:text-4xl">
                   Start your <em className="italic">private</em> search.
                 </h3>
               </div>
@@ -444,7 +444,7 @@ function Home() {
                   <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-primary">
                     {bento[1].suburb}, {bento[1].state}
                   </p>
-                  <p className="mt-1 font-serif text-xl leading-snug text-background line-clamp-2">
+                  <p className="mt-1 font-serif text-lg leading-snug text-background line-clamp-2 sm:text-xl md:text-2xl">
                     {bento[1].title}
                   </p>
                 </div>
@@ -453,7 +453,7 @@ function Home() {
 
             {/* Stat tile */}
             <div className="relative col-span-1 flex flex-col items-center justify-center rounded-3xl border border-primary/25 bg-[#1a1a1a] p-6 text-center sm:p-8 md:col-span-1 md:row-span-1">
-              <span className="font-serif text-5xl italic text-primary sm:text-6xl">$2.4B</span>
+              <span className="font-serif text-4xl italic text-primary sm:text-5xl md:text-6xl">$2.4B</span>
               <p className="mt-3 text-[10px] uppercase tracking-[0.3em] text-background/60">
                 Transactions closed
               </p>
@@ -482,7 +482,7 @@ function Home() {
                   <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-primary">
                     {bento[2].suburb}, {bento[2].state}
                   </p>
-                  <p className="mt-1 font-serif text-xl leading-snug text-background line-clamp-2">
+                  <p className="mt-1 font-serif text-lg leading-snug text-background line-clamp-2 sm:text-xl md:text-2xl">
                     {bento[2].title}
                   </p>
                 </div>
@@ -507,7 +507,7 @@ function Home() {
                   <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-primary">
                     {bento[3].suburb}, {bento[3].state}
                   </p>
-                  <p className="mt-1 font-serif text-xl leading-snug text-background line-clamp-2">
+                  <p className="mt-1 font-serif text-lg leading-snug text-background line-clamp-2 sm:text-xl md:text-2xl">
                     {bento[3].title}
                   </p>
                 </div>
@@ -538,7 +538,7 @@ function Home() {
                   <p className="text-xs font-semibold uppercase tracking-widest text-primary">
                     Signature listing
                   </p>
-                  <p className="mt-2 font-serif text-2xl leading-tight">{showcase.title}</p>
+                  <p className="mt-2 font-serif text-xl leading-tight sm:text-2xl">{showcase.title}</p>
                   <p className="mt-1 text-sm text-charcoal-soft">
                     {showcase.suburb}, {showcase.state}
                   </p>
@@ -552,7 +552,7 @@ function Home() {
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-primary">
                 — The Luxury Collection
               </p>
-              <h2 className="mt-4 font-serif text-4xl leading-tight text-background sm:text-5xl">
+              <h2 className="mt-4 font-serif text-3xl leading-tight text-background sm:text-4xl md:text-5xl lg:text-6xl">
                 Australia&rsquo;s most distinctive residences, presented with intention.
               </h2>
               <p className="mt-5 text-base leading-8 text-background/75">
@@ -598,7 +598,7 @@ function Home() {
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-primary">
                 — Just listed
               </p>
-              <h2 className="mt-4 font-serif text-4xl leading-tight text-charcoal sm:text-5xl">
+              <h2 className="mt-4 font-serif text-3xl leading-tight text-charcoal sm:text-4xl md:text-5xl lg:text-6xl">
                 Recently listed across Australia
               </h2>
             </div>
@@ -618,7 +618,7 @@ function Home() {
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-primary">
               — Popular destinations
             </p>
-            <h2 className="mt-4 font-serif text-4xl leading-tight text-charcoal sm:text-5xl">
+            <h2 className="mt-4 font-serif text-3xl leading-tight text-charcoal sm:text-4xl md:text-5xl lg:text-6xl">
               Explore Australia&rsquo;s most sought-after cities
             </h2>
           </div>
@@ -653,7 +653,7 @@ function Home() {
                     {location.state}
                   </p>
                   <div className="mt-1 flex items-end justify-between gap-3">
-                    <h3 className="font-serif text-3xl leading-tight">{location.name}</h3>
+                    <h3 className="font-serif text-2xl leading-tight sm:text-3xl md:text-4xl">{location.name}</h3>
                     <span className="flex size-10 items-center justify-center rounded-full bg-background/95 text-charcoal transition group-hover:bg-primary group-hover:text-primary-foreground">
                       <ArrowUpRight size={16} aria-hidden="true" />
                     </span>
@@ -687,7 +687,7 @@ function Home() {
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-primary">
                 — Local experts
               </p>
-              <h2 className="mt-4 font-serif text-4xl leading-tight text-charcoal sm:text-5xl">
+              <h2 className="mt-4 font-serif text-3xl leading-tight text-charcoal sm:text-4xl md:text-5xl lg:text-6xl">
                 Meet the agents behind the listings
               </h2>
               <p className="mt-4 text-base leading-7 text-muted-foreground">
@@ -717,7 +717,7 @@ function Home() {
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-primary">
               — Stories from clients
             </p>
-            <h2 className="mt-4 font-serif text-4xl leading-tight text-charcoal sm:text-5xl">
+            <h2 className="mt-4 font-serif text-3xl leading-tight text-charcoal sm:text-4xl md:text-5xl lg:text-6xl">
               Trusted by buyers, sellers, and renters across the country
             </h2>
           </div>
@@ -729,7 +729,7 @@ function Home() {
                 className="relative flex flex-col rounded-3xl border border-border/70 bg-surface p-8 shadow-soft transition duration-500 hover:-translate-y-1 hover:shadow-luxury"
               >
                 <Quote size={28} className="text-primary" aria-hidden="true" />
-                <blockquote className="mt-5 font-serif text-xl leading-relaxed text-charcoal">
+                <blockquote className="mt-5 font-serif text-lg leading-relaxed text-charcoal sm:text-xl md:text-2xl">
                   &ldquo;{t.quote}&rdquo;
                 </blockquote>
                 <figcaption className="mt-8 flex items-center gap-3 border-t border-border/60 pt-6">
@@ -759,7 +759,7 @@ function Home() {
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-primary">
                 — Journal
               </p>
-              <h2 className="mt-4 font-serif text-4xl leading-tight text-charcoal sm:text-5xl">
+              <h2 className="mt-4 font-serif text-3xl leading-tight text-charcoal sm:text-4xl md:text-5xl lg:text-6xl">
                 Insights from the Australian market
               </h2>
             </div>
@@ -825,7 +825,7 @@ function Home() {
                 <p className="text-xs font-semibold uppercase tracking-[0.28em] text-primary">
                   — The Nestoria Letter
                 </p>
-                <h2 className="mt-4 font-serif text-4xl leading-tight text-background sm:text-5xl">
+                <h2 className="mt-4 font-serif text-3xl leading-tight text-background sm:text-4xl md:text-5xl lg:text-6xl">
                   New listings, quietly delivered.
                 </h2>
                 <p className="mt-5 max-w-lg text-base leading-8 text-background/80">
