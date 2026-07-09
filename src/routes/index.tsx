@@ -390,24 +390,25 @@ function Home() {
                 className="object-cover opacity-80 transition duration-1000 group-hover:scale-105 group-hover:opacity-100"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-[#0d0d0d]/30 to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 p-8">
+              <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6 md:p-8">
                 <span className="inline-block rounded-full border border-primary/40 bg-black/40 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-primary backdrop-blur">
                   Signature listing
                 </span>
-                <h3 className="mt-5 font-serif text-h2 text-background">
+                <h3 className="mt-4 font-serif text-h2 text-background text-balance line-clamp-2 sm:mt-5">
                   {bento[0].title}
                 </h3>
-                <div className="mt-4 flex flex-wrap items-end gap-x-8 gap-y-2 text-sm text-background/80">
-                  <div>
+                <div className="mt-3 grid grid-cols-2 gap-x-6 gap-y-2 text-sm text-background/80 sm:mt-4 sm:flex sm:flex-wrap sm:items-end sm:gap-x-8">
+                  <div className="min-w-0">
                     <p className="text-[10px] uppercase tracking-widest text-background/50">Location</p>
-                    <p className="mt-1 text-background">{bento[0].suburb}, {bento[0].state}</p>
+                    <p className="mt-1 truncate text-background">{bento[0].suburb}, {bento[0].state}</p>
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-[10px] uppercase tracking-widest text-background/50">Guide</p>
-                    <p className="mt-1 font-serif text-tile text-primary">{bento[0].priceLabel}</p>
+                    <p className="mt-1 truncate font-serif text-tile text-primary">{bento[0].priceLabel}</p>
                   </div>
                 </div>
               </div>
+
             </Link>
 
             {/* Gold CTA tile */}
