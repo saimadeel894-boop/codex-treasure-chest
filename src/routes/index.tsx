@@ -442,11 +442,11 @@ function Home() {
                   className="object-cover opacity-70 transition duration-700 group-hover:scale-110 group-hover:opacity-90"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-5">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-primary">
+                <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5 md:p-6">
+                  <p className="min-w-0 truncate text-[10px] font-semibold uppercase tracking-[0.24em] text-primary">
                     {bento[1].suburb}, {bento[1].state}
                   </p>
-                  <p className="mt-1 font-serif text-tile text-background line-clamp-2">
+                  <p className="mt-1.5 font-serif text-tile leading-[1.15] text-background text-balance line-clamp-2">
                     {bento[1].title}
                   </p>
                 </div>
@@ -454,12 +454,12 @@ function Home() {
             )}
 
             {/* Stat tile */}
-            <div className="relative col-span-1 flex flex-col items-center justify-center rounded-3xl border border-primary/25 bg-[#1a1a1a] p-6 text-center sm:p-8 md:col-span-1 md:row-span-1">
+            <div className="relative col-span-1 flex flex-col items-center justify-center rounded-3xl border border-primary/25 bg-[#1a1a1a] p-5 text-center sm:p-7 md:col-span-1 md:row-span-1 md:p-8">
               <span className="font-serif text-stat italic text-primary">$2.4B</span>
-              <p className="mt-3 text-[10px] uppercase tracking-[0.3em] text-background/60">
+              <p className="mt-2 max-w-[14ch] text-[10px] leading-snug uppercase tracking-[0.3em] text-background/60 sm:mt-3">
                 Transactions closed
               </p>
-              <div className="mt-4 flex -space-x-2">
+              <div className="mt-3 flex -space-x-2 sm:mt-4">
                 <span className="size-6 rounded-full border border-[#0d0d0d] bg-primary/30" />
                 <span className="size-6 rounded-full border border-[#0d0d0d] bg-primary/50" />
                 <span className="size-6 rounded-full border border-[#0d0d0d] bg-primary" />
@@ -480,11 +480,11 @@ function Home() {
                   className="object-cover opacity-70 transition duration-700 group-hover:scale-110 group-hover:opacity-90"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-5">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-primary">
+                <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5 md:p-6">
+                  <p className="min-w-0 truncate text-[10px] font-semibold uppercase tracking-[0.24em] text-primary">
                     {bento[2].suburb}, {bento[2].state}
                   </p>
-                  <p className="mt-1 font-serif text-tile text-background line-clamp-2">
+                  <p className="mt-1.5 font-serif text-tile leading-[1.15] text-background text-balance line-clamp-2">
                     {bento[2].title}
                   </p>
                 </div>
@@ -505,11 +505,11 @@ function Home() {
                   className="object-cover opacity-70 transition duration-700 group-hover:scale-110 group-hover:opacity-90"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-5">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-primary">
+                <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5 md:p-6">
+                  <p className="min-w-0 truncate text-[10px] font-semibold uppercase tracking-[0.24em] text-primary">
                     {bento[3].suburb}, {bento[3].state}
                   </p>
-                  <p className="mt-1 font-serif text-tile text-background line-clamp-2">
+                  <p className="mt-1.5 font-serif text-tile leading-[1.15] text-background text-balance line-clamp-2">
                     {bento[3].title}
                   </p>
                 </div>
