@@ -348,26 +348,26 @@ function Home() {
         </div>
       </section>
 
-      {/* ================= FEATURED PROPERTIES ================= */}
-      <section className="bg-background py-24">
+      {/* ================= BENTO FEATURED ================= */}
+      <section className="bg-charcoal py-24 text-background">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
             <div className="max-w-xl">
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-primary">
-                — Featured this week
+                — The Noir Collection
               </p>
-              <h2 className="mt-4 font-serif text-4xl leading-tight text-charcoal sm:text-5xl">
-                Handpicked homes worth an inspection
+              <h2 className="mt-4 font-serif text-4xl leading-tight text-background sm:text-5xl">
+                Australia&rsquo;s most coveted residences, curated this week.
               </h2>
-              <p className="mt-4 text-base leading-7 text-muted-foreground">
-                A tightly edited shortlist of listings across Sydney, Melbourne and the coast.
+              <p className="mt-4 text-base leading-7 text-background/70">
+                A tightly edited bento of five signature homes — from harbourside estates to architectural retreats.
               </p>
             </div>
             <Link
               href="/search"
-              className="group inline-flex items-center gap-2 self-start rounded-full border border-border px-5 py-3 text-sm font-medium text-charcoal transition hover:border-primary hover:text-primary sm:self-end"
+              className="group inline-flex items-center gap-2 self-start rounded-full border border-background/25 bg-background/5 px-5 py-3 text-sm font-medium text-background backdrop-blur-md transition hover:border-primary hover:text-primary sm:self-end"
             >
-              View all properties
+              View entire collection
               <ArrowUpRight
                 size={15}
                 className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
@@ -376,10 +376,143 @@ function Home() {
             </Link>
           </div>
 
-          <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {featured.map((property) => (
-              <PropertyCard key={property.id} property={property} />
-            ))}
+          <div className="mt-12 grid auto-rows-[260px] grid-cols-1 gap-4 md:grid-cols-4 md:grid-rows-2">
+            {/* Hero tile — large */}
+            <Link
+              href={`/properties/${bento[0].id}`}
+              className="group relative overflow-hidden rounded-3xl border border-primary/20 bg-[#1a1a1a] md:col-span-2 md:row-span-2"
+            >
+              <Image
+                src={bento[0].images[0]}
+                alt={bento[0].title}
+                fill
+                sizes="(min-width: 768px) 50vw, 100vw"
+                className="object-cover opacity-80 transition duration-1000 group-hover:scale-105 group-hover:opacity-100"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-[#0d0d0d]/30 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-8">
+                <span className="inline-block rounded-full border border-primary/40 bg-black/40 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-primary backdrop-blur">
+                  Signature listing
+                </span>
+                <h3 className="mt-5 font-serif text-4xl leading-tight text-background sm:text-5xl">
+                  {bento[0].title}
+                </h3>
+                <div className="mt-4 flex flex-wrap items-end gap-x-8 gap-y-2 text-sm text-background/80">
+                  <div>
+                    <p className="text-[10px] uppercase tracking-widest text-background/50">Location</p>
+                    <p className="mt-1 text-background">{bento[0].suburb}, {bento[0].state}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-widest text-background/50">Guide</p>
+                    <p className="mt-1 font-serif text-lg text-primary">{bento[0].priceLabel}</p>
+                  </div>
+                </div>
+              </div>
+            </Link>
+
+            {/* Gold CTA tile */}
+            <Link
+              href="/search"
+              className="group relative flex flex-col justify-between overflow-hidden rounded-3xl bg-primary p-8 text-primary-foreground transition hover:-translate-y-1"
+            >
+              <div className="flex justify-end">
+                <ArrowUpRight size={28} className="transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1" aria-hidden="true" />
+              </div>
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.28em]">Concierge</p>
+                <h3 className="mt-3 font-serif text-3xl leading-[0.95]">
+                  Start your <em className="italic">private</em> search.
+                </h3>
+              </div>
+            </Link>
+
+            {/* Property tile 2 */}
+            {bento[1] && (
+              <Link
+                href={`/properties/${bento[1].id}`}
+                className="group relative overflow-hidden rounded-3xl border border-white/5 bg-[#1a1a1a]"
+              >
+                <Image
+                  src={bento[1].images[0]}
+                  alt={bento[1].title}
+                  fill
+                  sizes="(min-width: 768px) 25vw, 100vw"
+                  className="object-cover opacity-70 transition duration-700 group-hover:scale-110 group-hover:opacity-90"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 p-5">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-primary">
+                    {bento[1].suburb}, {bento[1].state}
+                  </p>
+                  <p className="mt-1 font-serif text-xl leading-snug text-background line-clamp-2">
+                    {bento[1].title}
+                  </p>
+                </div>
+              </Link>
+            )}
+
+            {/* Stat tile */}
+            <div className="relative flex flex-col items-center justify-center rounded-3xl border border-primary/25 bg-[#1a1a1a] p-8 text-center">
+              <span className="font-serif text-5xl italic text-primary sm:text-6xl">$2.4B</span>
+              <p className="mt-3 text-[10px] uppercase tracking-[0.3em] text-background/60">
+                Transactions closed
+              </p>
+              <div className="mt-4 flex -space-x-2">
+                <span className="size-6 rounded-full border border-[#0d0d0d] bg-primary/30" />
+                <span className="size-6 rounded-full border border-[#0d0d0d] bg-primary/50" />
+                <span className="size-6 rounded-full border border-[#0d0d0d] bg-primary" />
+              </div>
+            </div>
+
+            {/* Property tile 3 */}
+            {bento[2] && (
+              <Link
+                href={`/properties/${bento[2].id}`}
+                className="group relative overflow-hidden rounded-3xl border border-white/5 bg-[#1a1a1a]"
+              >
+                <Image
+                  src={bento[2].images[0]}
+                  alt={bento[2].title}
+                  fill
+                  sizes="(min-width: 768px) 25vw, 100vw"
+                  className="object-cover opacity-70 transition duration-700 group-hover:scale-110 group-hover:opacity-90"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 p-5">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-primary">
+                    {bento[2].suburb}, {bento[2].state}
+                  </p>
+                  <p className="mt-1 font-serif text-xl leading-snug text-background line-clamp-2">
+                    {bento[2].title}
+                  </p>
+                </div>
+              </Link>
+            )}
+
+            {/* Property tile 4 */}
+            {bento[3] && (
+              <Link
+                href={`/properties/${bento[3].id}`}
+                className="group relative overflow-hidden rounded-3xl border border-white/5 bg-[#1a1a1a]"
+              >
+                <Image
+                  src={bento[3].images[0]}
+                  alt={bento[3].title}
+                  fill
+                  sizes="(min-width: 768px) 25vw, 100vw"
+                  className="object-cover opacity-70 transition duration-700 group-hover:scale-110 group-hover:opacity-90"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 p-5">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-primary">
+                    {bento[3].suburb}, {bento[3].state}
+                  </p>
+                  <p className="mt-1 font-serif text-xl leading-snug text-background line-clamp-2">
+                    {bento[3].title}
+                  </p>
+                </div>
+              </Link>
+            )}
           </div>
         </div>
       </section>
