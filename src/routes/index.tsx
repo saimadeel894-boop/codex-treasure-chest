@@ -376,7 +376,7 @@ function Home() {
             </Link>
           </div>
 
-          <div className="mt-12 grid auto-rows-[260px] grid-cols-1 gap-4 md:grid-cols-4 md:grid-rows-2">
+          <div className="mt-12 grid auto-rows-[220px] grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:auto-rows-[240px] md:grid-cols-4 md:grid-rows-3 lg:auto-rows-[260px]">
             {/* Hero tile — large */}
             <Link
               href={`/properties/${bento[0].id}`}
