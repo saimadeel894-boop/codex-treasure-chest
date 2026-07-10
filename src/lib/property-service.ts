@@ -235,12 +235,12 @@ export type PropertyInput = {
   title: string;
   description: string;
   listing_type: "sale" | "rent";
-  property_type: "house" | "apartment" | "townhouse" | "land" | "new_development";
+  property_type: DbPropertyType;
   price_cents: number;
   rent_period?: "weekly" | "monthly" | null;
   address_line: string;
   suburb: string;
-  state: string;
+  state: DbState;
   postcode: string;
   bedrooms: number;
   bathrooms: number;
