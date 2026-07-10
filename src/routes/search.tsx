@@ -1,11 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "@/components/compat/Link";
 import { FilterComponent } from "@/components/FilterComponent";
 import { Pagination } from "@/components/Pagination";
 import { PropertyCard } from "@/components/PropertyCard";
 import { PropertyCardSkeletonGrid } from "@/components/PropertyCardSkeleton";
-import { properties } from "@/data/marketplace";
+import { fetchPublishedProperties, type PropertyFilters } from "@/lib/property-service";
 
 const PER_PAGE = 8;
 
@@ -19,30 +20,6 @@ export const Route = createFileRoute("/search")({
       { property: "og:url", content: "/search" },
     ],
     links: [{ rel: "canonical", href: "/search" }],
-    scripts: [
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "SearchResultsPage",
-          name: "Search properties",
-          url: "https://project--a0d96297-61d4-4523-ae1a-a95bf868e3f0.lovable.app/search",
-          isPartOf: {
-            "@id": "https://project--a0d96297-61d4-4523-ae1a-a95bf868e3f0.lovable.app/#website",
-          },
-          potentialAction: {
-            "@type": "SearchAction",
-            target: {
-              "@type": "EntryPoint",
-              urlTemplate:
-                "https://project--a0d96297-61d4-4523-ae1a-a95bf868e3f0.lovable.app/search?location={search_term_string}",
-            },
-            "query-input": "required name=search_term_string",
-          },
-        }),
-      },
-    ],
-
   }),
   component: SearchPage,
 });
@@ -53,45 +30,42 @@ function getParam(search: URLSearchParams, key: string) {
 }
 
 function SearchPage() {
-  const [hydrated, setHydrated] = useState(false);
   const [page, setPage] = useState(1);
+  const [searchString, setSearchString] = useState("");
+
   useEffect(() => {
-    setHydrated(true);
+    setSearchString(typeof window !== "undefined" ? window.location.search : "");
+    const onPop = () => setSearchString(window.location.search);
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
   }, []);
 
-  const search =
-    typeof window !== "undefined" ? new URLSearchParams(window.location.search) : new URLSearchParams();
+  const filters: PropertyFilters = useMemo(() => {
+    const s = new URLSearchParams(searchString);
+    const mode = (s.get("mode") || "").toLowerCase();
+    return {
+      mode: mode === "rent" ? "rent" : mode === "buy" ? "buy" : "",
+      state: getParam(s, "state"),
+      suburb: getParam(s, "suburb"),
+      location: s.get("location") ?? undefined,
+      type: getParam(s, "type"),
+      minPrice: Number(getParam(s, "minPrice")) || undefined,
+      maxPrice: Number(getParam(s, "maxPrice")) || undefined,
+      bedrooms: parseInt(getParam(s, "bedrooms")) || undefined,
+      bathrooms: parseInt(getParam(s, "bathrooms")) || undefined,
+      parking: parseInt(getParam(s, "parking")) || undefined,
+    };
+  }, [searchString]);
 
-  const filtered = useMemo(() => {
-    const mode = (search.get("mode") || "").toLowerCase();
-    const state = getParam(search, "state");
-    const suburb = (getParam(search, "suburb") || search.get("location") || "").toLowerCase();
-    const type = getParam(search, "type");
-    const minPrice = Number(getParam(search, "minPrice")) || 0;
-    const maxPrice = Number(getParam(search, "maxPrice")) || Infinity;
-    const beds = parseInt(getParam(search, "bedrooms")) || 0;
-    const baths = parseInt(getParam(search, "bathrooms")) || 0;
-    const parking = parseInt(getParam(search, "parking")) || 0;
+  const { data: results = [], isLoading, error } = useQuery({
+    queryKey: ["search", filters],
+    queryFn: () => fetchPublishedProperties(filters),
+  });
 
-    return properties.filter((p) => {
-      if (mode && p.mode.toLowerCase() !== mode) return false;
-      if (state && p.state !== state) return false;
-      if (suburb && !`${p.suburb} ${p.address} ${p.postcode}`.toLowerCase().includes(suburb)) return false;
-      if (type && p.propertyType !== type) return false;
-      if (p.price < minPrice || p.price > maxPrice) return false;
-      if (beds && p.bedrooms < beds) return false;
-      if (baths && p.bathrooms < baths) return false;
-      if (parking && p.parking < parking) return false;
-      return true;
-    });
-  }, [search]);
+  useEffect(() => setPage(1), [results.length]);
 
-  useEffect(() => {
-    setPage(1);
-  }, [filtered.length]);
-
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
-  const pageItems = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+  const totalPages = Math.max(1, Math.ceil(results.length / PER_PAGE));
+  const pageItems = results.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
@@ -99,34 +73,34 @@ function SearchPage() {
         <p className="text-eyebrow text-primary">Marketplace</p>
         <h1 className="mt-2 font-serif text-h2 text-charcoal">Search properties</h1>
         <p className="mt-2 text-caption text-muted-foreground">
-          {hydrated ? `${filtered.length} results found` : "Loading listings…"}
+          {isLoading ? "Loading listings…" : `${results.length} results found`}
         </p>
       </header>
       <div className="grid gap-8 lg:grid-cols-[320px_1fr]">
         <FilterComponent />
         <div>
-          {!hydrated ? (
+          {isLoading ? (
             <PropertyCardSkeletonGrid count={4} columns="md:grid-cols-2" />
-          ) : filtered.length === 0 ? (
+          ) : error ? (
+            <div className="rounded-3xl border border-rose-200 bg-rose-50 p-6 text-caption text-rose-700">
+              Could not load listings. Please retry.
+            </div>
+          ) : results.length === 0 ? (
             <div className="rounded-3xl border border-dashed border-border/70 bg-surface p-12 text-center">
               <p className="text-eyebrow text-primary">No matches</p>
               <h2 className="mt-2 font-serif text-h3 text-charcoal">No properties match your filters</h2>
               <p className="mx-auto mt-3 max-w-md text-caption text-muted-foreground">
                 Try widening your price range, removing a suburb, or clearing filters to see more homes.
               </p>
-              <Link
-                href="/search"
-                className="mt-6 inline-flex items-center gap-2 rounded-full border border-border px-5 py-2.5 text-caption font-semibold text-charcoal transition hover:border-primary hover:text-primary"
-              >
+              <Link href="/search"
+                className="mt-6 inline-flex items-center gap-2 rounded-full border border-border px-5 py-2.5 text-caption font-semibold text-charcoal transition hover:border-primary hover:text-primary">
                 Reset filters
               </Link>
             </div>
           ) : (
             <>
               <div className="grid gap-6 md:grid-cols-2">
-                {pageItems.map((p) => (
-                  <PropertyCard key={p.id} property={p} />
-                ))}
+                {pageItems.map((p) => <PropertyCard key={p.id} property={p} />)}
               </div>
               <Pagination
                 page={page}
@@ -135,7 +109,7 @@ function SearchPage() {
                   setPage(next);
                   if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
                 }}
-                totalItems={filtered.length}
+                totalItems={results.length}
                 perPage={PER_PAGE}
               />
             </>
