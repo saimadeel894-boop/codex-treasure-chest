@@ -17,12 +17,14 @@ import heroPoster from "@/assets/hero-poster.jpg";
 import { AgentCard } from "@/components/AgentCard";
 import { PropertyCard } from "@/components/PropertyCard";
 import { SearchComponent } from "@/components/SearchComponent";
+import { useQuery } from "@tanstack/react-query";
 import {
   agents,
   blogPosts,
   popularLocations,
-  properties,
+  properties as mockProperties,
 } from "@/data/marketplace";
+import { fetchPublishedProperties } from "@/lib/property-service";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -183,6 +185,12 @@ function AnimatedStat({ value, suffix, label }: (typeof stats)[number]) {
 }
 
 function Home() {
+  const { data: dbProperties } = useQuery({
+    queryKey: ["home-properties"],
+    queryFn: () => fetchPublishedProperties(),
+    staleTime: 60_000,
+  });
+  const properties = dbProperties && dbProperties.length > 0 ? dbProperties : mockProperties;
   const bento = properties.slice(0, 5);
   const showcase = properties[0];
   const latest = properties.slice(5, 8);

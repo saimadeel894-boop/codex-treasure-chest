@@ -1,4 +1,5 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { Bath, BedDouble, Car, CheckCircle2, MapPin, Quote, Ruler, Star } from "lucide-react";
 import { ContactAgentForm } from "@/components/ContactAgentForm";
 import { ImageGallery } from "@/components/ImageGallery";
@@ -8,8 +9,9 @@ import {
   getAgencyForProperty,
   getAgentForProperty,
   getPropertyById,
-  properties,
+  properties as mockProperties,
 } from "@/data/marketplace";
+import { fetchPropertyById, fetchPublishedProperties } from "@/lib/property-service";
 
 type PropertyTestimonial = {
   author: string;
@@ -221,8 +223,9 @@ export const Route = createFileRoute("/properties/$id")({
       ],
     };
   },
-  loader: ({ params }) => {
-    const property = getPropertyById(params.id);
+  loader: async ({ params }) => {
+    const dbProperty = await fetchPropertyById(params.id).catch(() => null);
+    const property = dbProperty ?? getPropertyById(params.id);
     if (!property) throw notFound();
     return { property };
   },
@@ -239,7 +242,13 @@ function PropertyPage() {
   const { property } = Route.useLoaderData();
   const agent = getAgentForProperty(property);
   const agency = getAgencyForProperty(property);
-  const similar = properties.filter((p) => p.id !== property.id && p.state === property.state).slice(0, 3);
+  const { data: dbSimilar } = useQuery({
+    queryKey: ["similar", property.state, property.id],
+    queryFn: () => fetchPublishedProperties({ state: property.state }),
+    staleTime: 60_000,
+  });
+  const pool = dbSimilar && dbSimilar.length > 0 ? dbSimilar : mockProperties;
+  const similar = pool.filter((p) => p.id !== property.id && p.state === property.state).slice(0, 3);
   const testimonials = buildTestimonials(property.suburb);
 
   return (

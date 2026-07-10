@@ -1,11 +1,8 @@
-import {
-  Heart,
-  LogIn,
-  Menu,
-  X,
-} from "lucide-react";
+import { Heart, LogIn, LogOut, Menu, User as UserIcon, X } from "lucide-react";
 import { Link } from "@/components/compat/Link";
 import { useEffect, useState } from "react";
+import { useAuth } from "@/hooks/use-auth";
+import { useNavigate } from "@tanstack/react-router";
 
 const navLinks = [
   { href: "/search?mode=buy", label: "Buy" },
@@ -19,6 +16,8 @@ const navLinks = [
 export function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 12);
@@ -26,6 +25,11 @@ export function Navbar() {
     window.addEventListener("scroll", handler, { passive: true });
     return () => window.removeEventListener("scroll", handler);
   }, []);
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate({ to: "/" });
+  };
 
   return (
     <header
@@ -42,53 +46,56 @@ export function Navbar() {
           </span>
           <span className="leading-tight">
             <span className="block font-serif text-tile text-charcoal">Nestoria</span>
-            <span className="text-eyebrow text-primary">
-              Australia
-            </span>
+            <span className="text-eyebrow text-primary">Australia</span>
           </span>
-
         </Link>
 
         <div className="hidden items-center gap-1 lg:flex">
           {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="relative rounded-full px-4 py-2 text-caption text-charcoal-soft transition hover:text-primary"
-            >
+            <Link key={link.href} href={link.href}
+              className="relative rounded-full px-4 py-2 text-caption text-charcoal-soft transition hover:text-primary">
               {link.label}
             </Link>
           ))}
         </div>
 
         <div className="flex items-center gap-2">
-          <Link
-            href="/saved-properties"
+          <Link href="/saved-properties"
             className="hidden size-10 items-center justify-center rounded-full border border-border text-charcoal-soft transition hover:border-primary hover:text-primary sm:flex"
-            aria-label="Saved properties"
-          >
+            aria-label="Saved properties">
             <Heart size={17} aria-hidden="true" />
           </Link>
-          <Link
-            href="/login"
-            className="hidden items-center gap-2 rounded-full border border-border px-4 py-2 text-caption text-charcoal transition hover:border-primary hover:text-primary sm:flex"
-          >
-            <LogIn size={15} aria-hidden="true" />
-            Sign in
-          </Link>
-          <Link
-            href="/list-property"
-            className="hidden items-center gap-2 rounded-full bg-charcoal px-4 py-2.5 text-caption text-background shadow-soft transition hover:bg-primary md:inline-flex"
-          >
-            List property
-          </Link>
-          <button
-            type="button"
-            onClick={() => setOpen((v) => !v)}
+
+          {user ? (
+            <>
+              <Link href="/dashboard"
+                className="hidden items-center gap-2 rounded-full border border-border px-4 py-2 text-caption text-charcoal transition hover:border-primary hover:text-primary sm:flex">
+                <UserIcon size={15} aria-hidden="true" />
+                Dashboard
+              </Link>
+              <button type="button" onClick={handleSignOut}
+                className="hidden items-center gap-2 rounded-full bg-charcoal px-4 py-2.5 text-caption text-background shadow-soft transition hover:bg-primary md:inline-flex">
+                <LogOut size={14} aria-hidden="true" />
+                Sign out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link href="/login"
+                className="hidden items-center gap-2 rounded-full border border-border px-4 py-2 text-caption text-charcoal transition hover:border-primary hover:text-primary sm:flex">
+                <LogIn size={15} aria-hidden="true" />
+                Sign in
+              </Link>
+              <Link href="/list-property"
+                className="hidden items-center gap-2 rounded-full bg-charcoal px-4 py-2.5 text-caption text-background shadow-soft transition hover:bg-primary md:inline-flex">
+                List property
+              </Link>
+            </>
+          )}
+
+          <button type="button" onClick={() => setOpen((v) => !v)}
             className="flex size-10 items-center justify-center rounded-full border border-border text-charcoal-soft transition hover:border-primary hover:text-primary lg:hidden"
-            aria-label="Toggle mobile menu"
-            aria-expanded={open}
-          >
+            aria-label="Toggle mobile menu" aria-expanded={open}>
             {open ? <X size={18} aria-hidden="true" /> : <Menu size={18} aria-hidden="true" />}
           </button>
         </div>
@@ -98,22 +105,34 @@ export function Navbar() {
         <div className="border-t border-border bg-background lg:hidden">
           <div className="mx-auto grid max-w-7xl gap-1 px-4 py-4 sm:px-6">
             {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setOpen(false)}
-                className="rounded-lg px-3 py-3 text-body font-medium text-charcoal-soft transition hover:bg-primary-soft hover:text-primary"
-              >
+              <Link key={link.href} href={link.href} onClick={() => setOpen(false)}
+                className="rounded-lg px-3 py-3 text-body font-medium text-charcoal-soft transition hover:bg-primary-soft hover:text-primary">
                 {link.label}
               </Link>
             ))}
-            <Link
-              href="/list-property"
-              onClick={() => setOpen(false)}
-              className="mt-2 flex items-center justify-center gap-2 rounded-full bg-primary px-4 py-3 text-caption font-semibold text-primary-foreground"
-            >
-              List your property
-            </Link>
+            {user ? (
+              <>
+                <Link href="/dashboard" onClick={() => setOpen(false)}
+                  className="rounded-lg px-3 py-3 text-body font-medium text-charcoal-soft transition hover:bg-primary-soft hover:text-primary">
+                  Dashboard
+                </Link>
+                <button type="button" onClick={() => { setOpen(false); handleSignOut(); }}
+                  className="mt-2 flex items-center justify-center gap-2 rounded-full bg-charcoal px-4 py-3 text-caption font-semibold text-background">
+                  Sign out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link href="/login" onClick={() => setOpen(false)}
+                  className="rounded-lg px-3 py-3 text-body font-medium text-charcoal-soft transition hover:bg-primary-soft hover:text-primary">
+                  Sign in
+                </Link>
+                <Link href="/list-property" onClick={() => setOpen(false)}
+                  className="mt-2 flex items-center justify-center gap-2 rounded-full bg-primary px-4 py-3 text-caption font-semibold text-primary-foreground">
+                  List your property
+                </Link>
+              </>
+            )}
           </div>
         </div>
       ) : null}
