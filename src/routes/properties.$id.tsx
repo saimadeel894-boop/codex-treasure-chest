@@ -242,7 +242,13 @@ function PropertyPage() {
   const { property } = Route.useLoaderData();
   const agent = getAgentForProperty(property);
   const agency = getAgencyForProperty(property);
-  const similar = properties.filter((p) => p.id !== property.id && p.state === property.state).slice(0, 3);
+  const { data: dbSimilar } = useQuery({
+    queryKey: ["similar", property.state, property.id],
+    queryFn: () => fetchPublishedProperties({ state: property.state }),
+    staleTime: 60_000,
+  });
+  const pool = dbSimilar && dbSimilar.length > 0 ? dbSimilar : mockProperties;
+  const similar = pool.filter((p) => p.id !== property.id && p.state === property.state).slice(0, 3);
   const testimonials = buildTestimonials(property.suburb);
 
   return (
