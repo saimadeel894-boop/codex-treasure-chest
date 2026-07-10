@@ -152,13 +152,18 @@ export type PropertyFilters = {
   parking?: number;
 };
 
-const dbPropertyType: Record<string, string> = {
+type DbPropertyType = "house" | "apartment" | "townhouse" | "land" | "rural";
+type DbState = "ACT" | "NSW" | "NT" | "QLD" | "SA" | "TAS" | "VIC" | "WA";
+
+const dbPropertyType: Record<string, DbPropertyType> = {
   House: "house",
   Apartment: "apartment",
   Townhouse: "townhouse",
   Land: "land",
-  "New development": "new_development",
+  "New development": "house",
 };
+
+const VALID_STATES: DbState[] = ["ACT", "NSW", "NT", "QLD", "SA", "TAS", "VIC", "WA"];
 
 export async function fetchPublishedProperties(filters: PropertyFilters = {}): Promise<Property[]> {
   let q = supabase
@@ -170,7 +175,7 @@ export async function fetchPublishedProperties(filters: PropertyFilters = {}): P
     .order("published_at", { ascending: false, nullsFirst: false });
 
   if (filters.mode) q = q.eq("listing_type", filters.mode === "rent" ? "rent" : "sale");
-  if (filters.state) q = q.eq("state", filters.state);
+  if (filters.state && (VALID_STATES as string[]).includes(filters.state)) q = q.eq("state", filters.state as DbState);
   if (filters.type && dbPropertyType[filters.type]) q = q.eq("property_type", dbPropertyType[filters.type]);
   if (filters.bedrooms) q = q.gte("bedrooms", filters.bedrooms);
   if (filters.bathrooms) q = q.gte("bathrooms", filters.bathrooms);
