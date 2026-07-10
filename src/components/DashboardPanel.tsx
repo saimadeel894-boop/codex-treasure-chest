@@ -1,340 +1,395 @@
-
-
-import { BarChart3, Heart, Home, MessageSquare, Settings, User, CheckCircle2, Edit2, ExternalLink, LayoutDashboard } from "lucide-react";
-import { useState } from "react";
+import { BarChart3, Bell, CheckCircle2, Edit2, ExternalLink, Heart, Home, MessageSquare } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "@/components/compat/Link";
 import { PropertyCard } from "@/components/PropertyCard";
-import { properties } from "@/data/marketplace";
-
-const tabs = [
-  { id: "overview", label: "Overview", icon: LayoutDashboard },
-  { id: "profile", label: "Profile", icon: User },
-  { id: "saved", label: "Saved properties", icon: Heart },
-  { id: "listings", label: "My listings", icon: Home },
-  { id: "messages", label: "Messages", icon: MessageSquare },
-  { id: "settings", label: "Settings", icon: Settings },
-];
+import { useAuth } from "@/hooks/use-auth";
+import { fetchMyProperties, fetchSavedProperties } from "@/lib/property-service";
+import {
+  fetchInquiriesForOwner,
+  fetchMyInquiries,
+  fetchNotifications,
+  fetchProfile,
+  markAllNotificationsRead,
+  markNotificationRead,
+  updateProfile,
+} from "@/lib/dashboard-service";
 
 type DashboardPanelProps = {
   activeTab: string;
   setActiveTab: (tab: string) => void;
 };
 
+function timeAgo(iso: string) {
+  const diff = Date.now() - new Date(iso).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return "just now";
+  if (mins < 60) return `${mins} min ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  const days = Math.floor(hrs / 24);
+  return `${days}d ago`;
+}
+
 export function DashboardPanel({ activeTab, setActiveTab }: DashboardPanelProps) {
+  const { user } = useAuth();
+  const userId = user?.id;
+  const qc = useQueryClient();
 
-  // Form states
+  const { data: profile } = useQuery({
+    queryKey: ["profile", userId],
+    queryFn: () => fetchProfile(userId!),
+    enabled: !!userId,
+  });
+  const { data: saved = [] } = useQuery({
+    queryKey: ["saved-props", userId],
+    queryFn: () => fetchSavedProperties(userId!),
+    enabled: !!userId,
+  });
+  const { data: listings = [] } = useQuery({
+    queryKey: ["my-props", userId],
+    queryFn: () => fetchMyProperties(userId!),
+    enabled: !!userId,
+  });
+  const { data: inbox = [] } = useQuery({
+    queryKey: ["inquiries-owner", userId],
+    queryFn: () => fetchInquiriesForOwner(userId!),
+    enabled: !!userId,
+  });
+  const { data: sent = [] } = useQuery({
+    queryKey: ["inquiries-mine", userId],
+    queryFn: () => fetchMyInquiries(userId!),
+    enabled: !!userId,
+  });
+  const { data: notifications = [] } = useQuery({
+    queryKey: ["notifications", userId],
+    queryFn: () => fetchNotifications(userId!),
+    enabled: !!userId,
+  });
+
+  const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
   const [profileSuccess, setProfileSuccess] = useState(false);
-  const [settingsSuccess, setSettingsSuccess] = useState(false);
 
-  const [profileData, setProfileData] = useState({
-    name: "Alex Johnson",
-    email: "alex@example.com",
-    phone: "0400 000 000",
-    role: "Buyer account",
-  });
-
-  const [settingsData, setSettingsData] = useState({
-    emailAlerts: true,
-    reminders: true,
-    enquiries: true,
-    reports: true,
-  });
-
-  const handleProfileSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const form = e.currentTarget;
-    if (form.checkValidity()) {
-      setProfileSuccess(true);
-      setTimeout(() => setProfileSuccess(false), 4000);
-    } else {
-      form.reportValidity();
+  useEffect(() => {
+    if (profile) {
+      setFullName(profile.fullName);
+      setPhone(profile.phone);
     }
-  };
+  }, [profile]);
 
-  const handleSettingsSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setSettingsSuccess(true);
-    setTimeout(() => setSettingsSuccess(false), 4000);
-  };
+  const updateProfileMut = useMutation({
+    mutationFn: () => updateProfile(userId!, { full_name: fullName, phone }),
+    onSuccess: () => {
+      setProfileSuccess(true);
+      qc.invalidateQueries({ queryKey: ["profile", userId] });
+      setTimeout(() => setProfileSuccess(false), 3000);
+    },
+  });
+
+  const markRead = useMutation({
+    mutationFn: (id: string) => markNotificationRead(id),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["notifications", userId] }),
+  });
+  const markAll = useMutation({
+    mutationFn: () => markAllNotificationsRead(userId!),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["notifications", userId] }),
+  });
+
+  const unreadCount = notifications.filter((n) => !n.read).length;
+  const messages = [...inbox, ...sent];
 
   return (
     <div className="rounded-lg border border-slate-200 bg-white shadow-sm">
-      <div className="flex gap-2 overflow-x-auto border-b border-slate-100 p-3">
-        {tabs.map((tab) => {
-          const Icon = tab.icon;
-          return (
-            <button
-              key={tab.id}
-              type="button"
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex h-11 shrink-0 items-center gap-2 rounded-md px-4 text-sm font-bold transition ${
-                activeTab === tab.id
-                  ? "bg-emerald-700 text-white"
-                  : "text-slate-700 hover:bg-slate-100 hover:text-slate-950"
-              }`}
-            >
-              <Icon size={17} aria-hidden="true" />
-              {tab.label}
-            </button>
-          );
-        })}
-      </div>
-
       <div className="p-5 sm:p-6">
-        {activeTab === "overview" ? (
+        {activeTab === "overview" && (
           <div className="space-y-6">
             <div className="rounded-lg bg-emerald-50 border border-emerald-100 p-6">
-              <h2 className="text-xl font-bold text-slate-950">Welcome back, Alex!</h2>
+              <h2 className="text-xl font-bold text-slate-950">
+                Welcome back{profile?.fullName ? `, ${profile.fullName.split(" ")[0]}` : ""}!
+              </h2>
               <p className="mt-2 text-sm text-slate-700 leading-6">
-                Here&apos;s what is happening with your property search and listings today. You have new inquiries on your listings, and some new properties match your saved search criteria.
+                You have {saved.length} saved {saved.length === 1 ? "property" : "properties"},{" "}
+                {listings.length} active {listings.length === 1 ? "listing" : "listings"}, and{" "}
+                {unreadCount} unread {unreadCount === 1 ? "notification" : "notifications"}.
               </p>
             </div>
-            
-            <div className="grid gap-6 sm:grid-cols-2">
-              <div className="border border-slate-200 rounded-lg p-5">
-                <h3 className="font-bold text-slate-950 flex items-center gap-2">
-                  <Heart size={16} className="text-rose-500" />
-                  Recent Saved Properties
-                </h3>
-                <div className="mt-3 space-y-2 text-sm text-slate-600">
-                  <p>Mosman Family Retreat - $4,250,000</p>
-                  <p>South Yarra Townhouse - $1,725,000</p>
-                </div>
-                <button type="button" onClick={() => setActiveTab("saved")} className="mt-4 text-xs font-bold text-emerald-800 hover:underline cursor-pointer">
-                  View all saved properties
-                </button>
-              </div>
 
-              <div className="border border-slate-200 rounded-lg p-5">
-                <h3 className="font-bold text-slate-950 flex items-center gap-2">
-                  <MessageSquare size={16} className="text-emerald-700" />
-                  Recent Messages
-                </h3>
-                <div className="mt-3 space-y-2 text-sm text-slate-600">
-                  <p>Inspection request for Mosman - 1 day ago</p>
-                  <p>Rental enquiry in Noosa - 2 days ago</p>
-                </div>
-                <button type="button" onClick={() => setActiveTab("messages")} className="mt-4 text-xs font-bold text-emerald-800 hover:underline cursor-pointer">
-                  View all messages
-                </button>
-              </div>
+            <div className="grid gap-6 sm:grid-cols-3">
+              <StatCard icon={Heart} label="Saved" value={saved.length} onClick={() => setActiveTab("saved")} color="rose" />
+              <StatCard icon={Home} label="Listings" value={listings.length} onClick={() => setActiveTab("listings")} color="emerald" />
+              <StatCard icon={MessageSquare} label="Enquiries" value={inbox.length} onClick={() => setActiveTab("messages")} color="amber" />
             </div>
-          </div>
-        ) : null}
 
-        {activeTab === "profile" ? (
+            {notifications.length > 0 && (
+              <div className="border border-slate-200 rounded-lg p-5">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-bold text-slate-950 flex items-center gap-2">
+                    <Bell size={16} className="text-emerald-700" /> Recent activity
+                  </h3>
+                  <button onClick={() => setActiveTab("notifications")} className="text-xs font-bold text-emerald-800 hover:underline">
+                    See all
+                  </button>
+                </div>
+                <ul className="mt-3 space-y-2 text-sm text-slate-600">
+                  {notifications.slice(0, 3).map((n) => (
+                    <li key={n.id} className="flex justify-between gap-3">
+                      <span className={n.read ? "text-slate-500" : "font-semibold text-slate-800"}>{n.title}</span>
+                      <span className="shrink-0 text-xs text-slate-400">{timeAgo(n.createdAt)}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === "profile" && (
           <div className="grid gap-6 lg:grid-cols-[1fr_280px]">
             <div>
               <h2 className="text-2xl font-bold text-slate-950">Profile</h2>
-              <p className="mt-2 text-slate-600">
-                Manage your public details before backend account storage is connected.
-              </p>
-
-              <form className="mt-6 space-y-4" onSubmit={handleProfileSubmit}>
+              <p className="mt-2 text-slate-600">Manage your public details.</p>
+              <form
+                className="mt-6 space-y-4"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  updateProfileMut.mutate();
+                }}
+              >
                 <div className="grid gap-4 sm:grid-cols-2">
                   <label className="text-sm font-semibold text-slate-700">
                     Full name
                     <input
                       required
-                      name="name"
-                      value={profileData.name}
-                      onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
                       className="mt-2 h-12 w-full rounded-md border border-slate-200 px-3 outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100"
                     />
                   </label>
                   <label className="text-sm font-semibold text-slate-700">
                     Email address
                     <input
-                      required
-                      type="email"
-                      name="email"
-                      value={profileData.email}
-                      onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
-                      className="mt-2 h-12 w-full rounded-md border border-slate-200 px-3 outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100"
+                      value={user?.email ?? ""}
+                      disabled
+                      className="mt-2 h-12 w-full rounded-md border border-slate-200 bg-slate-50 px-3 text-slate-500"
                     />
                   </label>
-                  <label className="text-sm font-semibold text-slate-700">
+                  <label className="text-sm font-semibold text-slate-700 sm:col-span-2">
                     Phone number
                     <input
-                      required
-                      name="phone"
-                      value={profileData.phone}
-                      onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
                       className="mt-2 h-12 w-full rounded-md border border-slate-200 px-3 outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100"
                     />
-                  </label>
-                  <label className="text-sm font-semibold text-slate-700">
-                    Role / Account Type
-                    <select
-                      name="role"
-                      value={profileData.role}
-                      onChange={(e) => setProfileData({ ...profileData, role: e.target.value })}
-                      className="mt-2 h-12 w-full rounded-md border border-slate-200 bg-white px-3 outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100"
-                    >
-                      <option>Buyer account</option>
-                      <option>Seller account</option>
-                      <option>Real estate agent</option>
-                      <option>Property developer</option>
-                    </select>
                   </label>
                 </div>
 
-                {profileSuccess ? (
+                {profileSuccess && (
                   <div className="flex items-start gap-2 rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm font-semibold text-emerald-800">
                     <CheckCircle2 size={18} className="mt-0.5 shrink-0" aria-hidden="true" />
-                    Profile details updated successfully! (Frontend simulation complete)
+                    Profile updated successfully.
                   </div>
-                ) : null}
+                )}
+                {updateProfileMut.isError && (
+                  <p className="text-sm font-semibold text-rose-700">
+                    Could not save changes. Please try again.
+                  </p>
+                )}
 
                 <button
                   type="submit"
-                  className="h-11 rounded-md bg-emerald-700 px-5 text-sm font-bold text-white transition hover:bg-emerald-800 shadow-sm"
+                  disabled={updateProfileMut.isPending}
+                  className="h-11 rounded-md bg-emerald-700 px-5 text-sm font-bold text-white transition hover:bg-emerald-800 shadow-sm disabled:opacity-60"
                 >
-                  Save Profile Changes
+                  {updateProfileMut.isPending ? "Saving…" : "Save profile changes"}
                 </button>
               </form>
             </div>
             <div className="rounded-lg bg-slate-50 p-5 self-start">
               <p className="flex items-center gap-2 text-sm font-bold text-slate-950">
-                <BarChart3 size={17} aria-hidden="true" />
-                Account snapshot
+                <BarChart3 size={17} aria-hidden="true" /> Account snapshot
               </p>
               <div className="mt-4 space-y-3 text-sm text-slate-600">
-                <p>3 saved properties</p>
-                <p>2 active enquiries</p>
-                <p>2 active listings</p>
+                <p>{saved.length} saved properties</p>
+                <p>{inbox.length} enquiries received</p>
+                <p>{listings.length} active listings</p>
               </div>
             </div>
           </div>
-        ) : null}
+        )}
 
-        {activeTab === "saved" ? (
+        {activeTab === "saved" && (
           <div>
             <h2 className="text-2xl font-bold text-slate-950">Saved properties</h2>
-            <div className="mt-6 grid gap-5 md:grid-cols-2">
-              {properties.slice(0, 2).map((property) => (
-                <PropertyCard key={property.id} property={property} compact />
-              ))}
-            </div>
+            {saved.length === 0 ? (
+              <p className="mt-4 text-slate-600">No saved properties yet. Tap the heart on any listing to save it.</p>
+            ) : (
+              <div className="mt-6 grid gap-5 md:grid-cols-2">
+                {saved.map((property) => (
+                  <PropertyCard key={property.id} property={property} compact />
+                ))}
+              </div>
+            )}
           </div>
-        ) : null}
+        )}
 
-        {activeTab === "listings" ? (
+        {activeTab === "listings" && (
           <div>
-            <h2 className="text-2xl font-bold text-slate-950">My listings</h2>
-            <p className="mt-2 text-sm text-slate-600">
-              Manage your property ads. Click Edit to update listings or View to open the public details page.
-            </p>
-            <div className="mt-6 grid gap-5 md:grid-cols-2">
-              {properties.slice(2, 4).map((property) => (
-                <div key={property.id} className="flex flex-col border border-slate-200 rounded-lg overflow-hidden bg-white shadow-sm">
-                  <div className="flex-1">
-                    <PropertyCard property={property} compact />
-                  </div>
-                  <div className="border-t border-slate-100 p-3 bg-slate-50 flex gap-2">
-                    <Link
-                      href={`/edit-property/${property.id}`}
-                      className="flex-1 flex h-10 items-center justify-center gap-1.5 rounded-md bg-slate-950 text-xs font-bold text-white transition hover:bg-emerald-800"
-                    >
-                      <Edit2 size={13} aria-hidden="true" />
-                      Edit Listing
-                    </Link>
-                    <Link
-                      href={`/properties/${property.id}`}
-                      className="px-4 flex h-10 items-center justify-center gap-1.5 rounded-md border border-slate-200 text-xs font-bold text-slate-700 bg-white transition hover:bg-slate-50"
-                    >
-                      <ExternalLink size={13} aria-hidden="true" />
-                      View
-                    </Link>
-                  </div>
-                </div>
-              ))}
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-bold text-slate-950">My listings</h2>
+              <Link href="/list-property" className="rounded-md bg-emerald-700 px-4 py-2 text-sm font-bold text-white hover:bg-emerald-800">
+                + New listing
+              </Link>
             </div>
-          </div>
-        ) : null}
-
-        {activeTab === "messages" ? (
-          <div>
-            <h2 className="text-2xl font-bold text-slate-950">Messages</h2>
-            <div className="mt-6 space-y-3">
-              {["Inspection request for Mosman", "Rental enquiry in Noosa", "Agent follow-up"].map(
-                (message, index) => (
-                  <div key={message} className="rounded-lg border border-slate-200 p-4">
-                    <p className="font-bold text-slate-950">{message}</p>
-                    <p className="mt-1 text-sm text-slate-500">
-                      {index + 1} day{index === 0 ? "" : "s"} ago
-                    </p>
+            {listings.length === 0 ? (
+              <p className="mt-4 text-slate-600">You have not published any listings yet.</p>
+            ) : (
+              <div className="mt-6 grid gap-5 md:grid-cols-2">
+                {listings.map((property) => (
+                  <div key={property.id} className="flex flex-col border border-slate-200 rounded-lg overflow-hidden bg-white shadow-sm">
+                    <div className="flex-1">
+                      <PropertyCard property={property} compact />
+                    </div>
+                    <div className="border-t border-slate-100 p-3 bg-slate-50 flex gap-2">
+                      <Link
+                        href={`/edit-property/${property.id}`}
+                        className="flex-1 flex h-10 items-center justify-center gap-1.5 rounded-md bg-slate-950 text-xs font-bold text-white transition hover:bg-emerald-800"
+                      >
+                        <Edit2 size={13} aria-hidden="true" /> Edit
+                      </Link>
+                      <Link
+                        href={`/properties/${property.id}`}
+                        className="px-4 flex h-10 items-center justify-center gap-1.5 rounded-md border border-slate-200 text-xs font-bold text-slate-700 bg-white transition hover:bg-slate-50"
+                      >
+                        <ExternalLink size={13} aria-hidden="true" /> View
+                      </Link>
+                    </div>
                   </div>
-                ),
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === "messages" && (
+          <div>
+            <h2 className="text-2xl font-bold text-slate-950">Messages & enquiries</h2>
+            {messages.length === 0 ? (
+              <p className="mt-4 text-slate-600">No enquiries yet.</p>
+            ) : (
+              <div className="mt-6 space-y-3">
+                {messages.map((m) => (
+                  <div key={m.id} className="rounded-lg border border-slate-200 p-4">
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className="font-bold text-slate-950">{m.name} — {m.propertyTitle}</p>
+                        <p className="text-xs text-slate-500">{m.email}{m.phone ? ` · ${m.phone}` : ""}</p>
+                      </div>
+                      <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-bold text-emerald-800">
+                        {m.status}
+                      </span>
+                    </div>
+                    <p className="mt-2 text-sm text-slate-700">{m.message}</p>
+                    <p className="mt-2 text-xs text-slate-400">{timeAgo(m.createdAt)}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === "notifications" && (
+          <div>
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-bold text-slate-950">Notifications</h2>
+              {unreadCount > 0 && (
+                <button
+                  onClick={() => markAll.mutate()}
+                  className="text-sm font-bold text-emerald-800 hover:underline"
+                >
+                  Mark all as read
+                </button>
               )}
             </div>
+            {notifications.length === 0 ? (
+              <p className="mt-4 text-slate-600">You are all caught up.</p>
+            ) : (
+              <div className="mt-6 space-y-2">
+                {notifications.map((n) => (
+                  <button
+                    key={n.id}
+                    onClick={() => !n.read && markRead.mutate(n.id)}
+                    className={`w-full rounded-lg border p-4 text-left transition ${
+                      n.read ? "border-slate-200 bg-white" : "border-emerald-200 bg-emerald-50/50"
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className={n.read ? "font-semibold text-slate-700" : "font-bold text-slate-950"}>
+                          {n.title}
+                        </p>
+                        {n.body && <p className="mt-1 text-sm text-slate-600">{n.body}</p>}
+                      </div>
+                      <span className="shrink-0 text-xs text-slate-400">{timeAgo(n.createdAt)}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
-        ) : null}
+        )}
 
-        {activeTab === "settings" ? (
+        {activeTab === "settings" && (
           <div>
             <h2 className="text-2xl font-bold text-slate-950">Settings</h2>
-            <p className="mt-2 text-slate-600">
-              Configure your notifications and listing visibility updates.
-            </p>
-
-            <form className="mt-6 space-y-4" onSubmit={handleSettingsSubmit}>
-              <div className="grid gap-4 sm:grid-cols-2">
-                <label className="flex items-center justify-between gap-4 rounded-lg border border-slate-200 p-4 text-sm font-semibold text-slate-700 cursor-pointer hover:border-slate-300">
-                  Email property alerts
-                  <input
-                    type="checkbox"
-                    checked={settingsData.emailAlerts}
-                    onChange={(e) => setSettingsData({ ...settingsData, emailAlerts: e.target.checked })}
-                    className="size-5 accent-emerald-700"
-                  />
-                </label>
-                <label className="flex items-center justify-between gap-4 rounded-lg border border-slate-200 p-4 text-sm font-semibold text-slate-700 cursor-pointer hover:border-slate-300">
-                  Inspection reminders
-                  <input
-                    type="checkbox"
-                    checked={settingsData.reminders}
-                    onChange={(e) => setSettingsData({ ...settingsData, reminders: e.target.checked })}
-                    className="size-5 accent-emerald-700"
-                  />
-                </label>
-                <label className="flex items-center justify-between gap-4 rounded-lg border border-slate-200 p-4 text-sm font-semibold text-slate-700 cursor-pointer hover:border-slate-300">
-                  Agent enquiry updates
-                  <input
-                    type="checkbox"
-                    checked={settingsData.enquiries}
-                    onChange={(e) => setSettingsData({ ...settingsData, enquiries: e.target.checked })}
-                    className="size-5 accent-emerald-700"
-                  />
-                </label>
-                <label className="flex items-center justify-between gap-4 rounded-lg border border-slate-200 p-4 text-sm font-semibold text-slate-700 cursor-pointer hover:border-slate-300">
-                  Market report emails
-                  <input
-                    type="checkbox"
-                    checked={settingsData.reports}
-                    onChange={(e) => setSettingsData({ ...settingsData, reports: e.target.checked })}
-                    className="size-5 accent-emerald-700"
-                  />
-                </label>
+            <p className="mt-2 text-slate-600">Manage your account and email preferences.</p>
+            <div className="mt-6 space-y-4">
+              <Link href="/forgot-password" className="block rounded-lg border border-slate-200 p-4 hover:border-emerald-300 hover:bg-emerald-50">
+                <p className="font-bold text-slate-950">Change password</p>
+                <p className="mt-1 text-sm text-slate-600">Send yourself a password reset email.</p>
+              </Link>
+              <div className="rounded-lg border border-slate-200 p-4">
+                <p className="font-bold text-slate-950">Email preferences</p>
+                <p className="mt-1 text-sm text-slate-600">
+                  Manage which property alerts and market updates you receive. Coming soon.
+                </p>
               </div>
-
-              {settingsSuccess ? (
-                <div className="flex items-start gap-2 rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm font-semibold text-emerald-800">
-                  <CheckCircle2 size={18} className="mt-0.5 shrink-0" aria-hidden="true" />
-                  Settings saved successfully! (Frontend simulation complete)
-                </div>
-              ) : null}
-
-              <button
-                type="submit"
-                className="h-11 rounded-md bg-emerald-700 px-5 text-sm font-bold text-white transition hover:bg-emerald-800 shadow-sm"
-              >
-                Save Settings
-              </button>
-            </form>
+            </div>
           </div>
-        ) : null}
+        )}
       </div>
     </div>
+  );
+}
+
+function StatCard({
+  icon: Icon,
+  label,
+  value,
+  onClick,
+  color,
+}: {
+  icon: typeof Heart;
+  label: string;
+  value: number;
+  onClick: () => void;
+  color: "rose" | "emerald" | "amber";
+}) {
+  const styles = {
+    rose: "text-rose-600 bg-rose-50",
+    emerald: "text-emerald-700 bg-emerald-50",
+    amber: "text-amber-700 bg-amber-50",
+  }[color];
+  return (
+    <button
+      onClick={onClick}
+      className="rounded-lg border border-slate-200 bg-white p-5 text-left transition hover:border-emerald-300 hover:shadow-sm"
+    >
+      <div className={`inline-flex size-9 items-center justify-center rounded-md ${styles}`}>
+        <Icon size={18} />
+      </div>
+      <p className="mt-3 text-3xl font-bold text-slate-950">{value}</p>
+      <p className="text-sm text-slate-500">{label}</p>
+    </button>
   );
 }
