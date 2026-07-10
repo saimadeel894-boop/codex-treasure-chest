@@ -14,6 +14,312 @@ export type Database = {
   }
   public: {
     Tables: {
+      agencies: {
+        Row: {
+          address_line: string | null
+          created_at: string
+          deleted_at: string | null
+          description: string | null
+          email: string | null
+          id: string
+          logo_url: string | null
+          name: string
+          phone: string | null
+          postcode: string | null
+          slug: string
+          state: Database["public"]["Enums"]["au_state"] | null
+          suburb: string | null
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          address_line?: string | null
+          created_at?: string
+          deleted_at?: string | null
+          description?: string | null
+          email?: string | null
+          id?: string
+          logo_url?: string | null
+          name: string
+          phone?: string | null
+          postcode?: string | null
+          slug: string
+          state?: Database["public"]["Enums"]["au_state"] | null
+          suburb?: string | null
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          address_line?: string | null
+          created_at?: string
+          deleted_at?: string | null
+          description?: string | null
+          email?: string | null
+          id?: string
+          logo_url?: string | null
+          name?: string
+          phone?: string | null
+          postcode?: string | null
+          slug?: string
+          state?: Database["public"]["Enums"]["au_state"] | null
+          suburb?: string | null
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
+      agents: {
+        Row: {
+          agency_id: string | null
+          avatar_url: string | null
+          bio: string | null
+          created_at: string
+          deleted_at: string | null
+          email: string | null
+          full_name: string
+          id: string
+          license_number: string | null
+          phone: string | null
+          slug: string | null
+          specialties: string[]
+          title: string | null
+          updated_at: string
+          user_id: string | null
+          years_experience: number | null
+        }
+        Insert: {
+          agency_id?: string | null
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          deleted_at?: string | null
+          email?: string | null
+          full_name: string
+          id?: string
+          license_number?: string | null
+          phone?: string | null
+          slug?: string | null
+          specialties?: string[]
+          title?: string | null
+          updated_at?: string
+          user_id?: string | null
+          years_experience?: number | null
+        }
+        Update: {
+          agency_id?: string | null
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          deleted_at?: string | null
+          email?: string | null
+          full_name?: string
+          id?: string
+          license_number?: string | null
+          phone?: string | null
+          slug?: string | null
+          specialties?: string[]
+          title?: string | null
+          updated_at?: string
+          user_id?: string | null
+          years_experience?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agents_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "agencies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blog_categories: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          slug: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          slug?: string
+        }
+        Relationships: []
+      }
+      blogs: {
+        Row: {
+          author_id: string | null
+          category_id: string | null
+          content: string
+          cover_image_url: string | null
+          created_at: string
+          deleted_at: string | null
+          excerpt: string | null
+          id: string
+          is_published: boolean
+          published_at: string | null
+          read_time_minutes: number | null
+          slug: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author_id?: string | null
+          category_id?: string | null
+          content: string
+          cover_image_url?: string | null
+          created_at?: string
+          deleted_at?: string | null
+          excerpt?: string | null
+          id?: string
+          is_published?: boolean
+          published_at?: string | null
+          read_time_minutes?: number | null
+          slug: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string | null
+          category_id?: string | null
+          content?: string
+          cover_image_url?: string | null
+          created_at?: string
+          deleted_at?: string | null
+          excerpt?: string | null
+          id?: string
+          is_published?: boolean
+          published_at?: string | null
+          read_time_minutes?: number | null
+          slug?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blogs_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "blog_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      developer_projects: {
+        Row: {
+          completion_date: string | null
+          created_at: string
+          deleted_at: string | null
+          description: string | null
+          developer_id: string
+          hero_image_url: string | null
+          id: string
+          name: string
+          price_from_cents: number | null
+          slug: string
+          state: Database["public"]["Enums"]["au_state"] | null
+          status: string
+          suburb: string | null
+          updated_at: string
+        }
+        Insert: {
+          completion_date?: string | null
+          created_at?: string
+          deleted_at?: string | null
+          description?: string | null
+          developer_id: string
+          hero_image_url?: string | null
+          id?: string
+          name: string
+          price_from_cents?: number | null
+          slug: string
+          state?: Database["public"]["Enums"]["au_state"] | null
+          status?: string
+          suburb?: string | null
+          updated_at?: string
+        }
+        Update: {
+          completion_date?: string | null
+          created_at?: string
+          deleted_at?: string | null
+          description?: string | null
+          developer_id?: string
+          hero_image_url?: string | null
+          id?: string
+          name?: string
+          price_from_cents?: number | null
+          slug?: string
+          state?: Database["public"]["Enums"]["au_state"] | null
+          status?: string
+          suburb?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "developer_projects_developer_id_fkey"
+            columns: ["developer_id"]
+            isOneToOne: false
+            referencedRelation: "developers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      developers: {
+        Row: {
+          created_at: string
+          deleted_at: string | null
+          description: string | null
+          email: string | null
+          id: string
+          logo_url: string | null
+          name: string
+          phone: string | null
+          slug: string
+          updated_at: string
+          user_id: string | null
+          website: string | null
+        }
+        Insert: {
+          created_at?: string
+          deleted_at?: string | null
+          description?: string | null
+          email?: string | null
+          id?: string
+          logo_url?: string | null
+          name: string
+          phone?: string | null
+          slug: string
+          updated_at?: string
+          user_id?: string | null
+          website?: string | null
+        }
+        Update: {
+          created_at?: string
+          deleted_at?: string | null
+          description?: string | null
+          email?: string | null
+          id?: string
+          logo_url?: string | null
+          name?: string
+          phone?: string | null
+          slug?: string
+          updated_at?: string
+          user_id?: string | null
+          website?: string | null
+        }
+        Relationships: []
+      }
       favourites: {
         Row: {
           created_at: string
@@ -39,6 +345,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          link: string | null
+          read: boolean
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          link?: string | null
+          read?: boolean
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          link?: string | null
+          read?: boolean
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       profiles: {
         Row: {
@@ -70,10 +409,13 @@ export type Database = {
       properties: {
         Row: {
           address_line: string
+          agency_id: string | null
+          agent_id: string | null
           bathrooms: number
           bedrooms: number
           building_size_sqm: number | null
           created_at: string
+          deleted_at: string | null
           description: string
           featured: boolean
           features: string[]
@@ -96,10 +438,13 @@ export type Database = {
         }
         Insert: {
           address_line: string
+          agency_id?: string | null
+          agent_id?: string | null
           bathrooms?: number
           bedrooms?: number
           building_size_sqm?: number | null
           created_at?: string
+          deleted_at?: string | null
           description: string
           featured?: boolean
           features?: string[]
@@ -122,10 +467,13 @@ export type Database = {
         }
         Update: {
           address_line?: string
+          agency_id?: string | null
+          agent_id?: string | null
           bathrooms?: number
           bedrooms?: number
           building_size_sqm?: number | null
           created_at?: string
+          deleted_at?: string | null
           description?: string
           featured?: boolean
           features?: string[]
@@ -145,6 +493,75 @@ export type Database = {
           state?: Database["public"]["Enums"]["au_state"]
           suburb?: string
           title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "properties_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "agencies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "properties_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      property_feature_map: {
+        Row: {
+          feature_id: string
+          property_id: string
+        }
+        Insert: {
+          feature_id: string
+          property_id: string
+        }
+        Update: {
+          feature_id?: string
+          property_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_feature_map_feature_id_fkey"
+            columns: ["feature_id"]
+            isOneToOne: false
+            referencedRelation: "property_features"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "property_feature_map_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      property_features: {
+        Row: {
+          created_at: string
+          icon: string | null
+          id: string
+          name: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string
+          icon?: string | null
+          id?: string
+          name: string
+          slug: string
+        }
+        Update: {
+          created_at?: string
+          icon?: string | null
+          id?: string
+          name?: string
+          slug?: string
         }
         Relationships: []
       }
@@ -186,6 +603,101 @@ export type Database = {
           },
         ]
       }
+      property_inquiries: {
+        Row: {
+          created_at: string
+          email: string
+          from_user_id: string | null
+          id: string
+          message: string
+          name: string
+          phone: string | null
+          property_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          from_user_id?: string | null
+          id?: string
+          message: string
+          name: string
+          phone?: string | null
+          property_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          from_user_id?: string | null
+          id?: string
+          message?: string
+          name?: string
+          phone?: string | null
+          property_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_inquiries_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      settings: {
+        Row: {
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          value: Json
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          created_at: string
+          current_period_end: string | null
+          id: string
+          plan: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_period_end?: string | null
+          id?: string
+          plan?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_period_end?: string | null
+          id?: string
+          plan?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -209,7 +721,32 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      saved_properties: {
+        Row: {
+          created_at: string | null
+          property_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          property_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          property_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favourites_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       has_role: {
