@@ -13,6 +13,7 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as SavedPropertiesRouteImport } from './routes/saved-properties'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as MyListingsRouteImport } from './routes/my-listings'
@@ -48,6 +49,11 @@ const SearchRoute = SearchRouteImport.update({
 const SavedPropertiesRoute = SavedPropertiesRouteImport.update({
   id: '/saved-properties',
   path: '/saved-properties',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RegisterRoute = RegisterRouteImport.update({
@@ -143,6 +149,7 @@ export interface FileRoutesByFullPath {
   '/my-listings': typeof MyListingsRoute
   '/privacy': typeof PrivacyRoute
   '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/saved-properties': typeof SavedPropertiesRoute
   '/search': typeof SearchRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -165,6 +172,7 @@ export interface FileRoutesByTo {
   '/my-listings': typeof MyListingsRoute
   '/privacy': typeof PrivacyRoute
   '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/saved-properties': typeof SavedPropertiesRoute
   '/search': typeof SearchRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -188,6 +196,7 @@ export interface FileRoutesById {
   '/my-listings': typeof MyListingsRoute
   '/privacy': typeof PrivacyRoute
   '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/saved-properties': typeof SavedPropertiesRoute
   '/search': typeof SearchRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -212,6 +221,7 @@ export interface FileRouteTypes {
     | '/my-listings'
     | '/privacy'
     | '/register'
+    | '/reset-password'
     | '/saved-properties'
     | '/search'
     | '/sitemap.xml'
@@ -234,6 +244,7 @@ export interface FileRouteTypes {
     | '/my-listings'
     | '/privacy'
     | '/register'
+    | '/reset-password'
     | '/saved-properties'
     | '/search'
     | '/sitemap.xml'
@@ -256,6 +267,7 @@ export interface FileRouteTypes {
     | '/my-listings'
     | '/privacy'
     | '/register'
+    | '/reset-password'
     | '/saved-properties'
     | '/search'
     | '/sitemap.xml'
@@ -279,6 +291,7 @@ export interface RootRouteChildren {
   MyListingsRoute: typeof MyListingsRoute
   PrivacyRoute: typeof PrivacyRoute
   RegisterRoute: typeof RegisterRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SavedPropertiesRoute: typeof SavedPropertiesRoute
   SearchRoute: typeof SearchRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -317,6 +330,13 @@ declare module '@tanstack/react-router' {
       path: '/saved-properties'
       fullPath: '/saved-properties'
       preLoaderRoute: typeof SavedPropertiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/register': {
@@ -456,6 +476,7 @@ const rootRouteChildren: RootRouteChildren = {
   MyListingsRoute: MyListingsRoute,
   PrivacyRoute: PrivacyRoute,
   RegisterRoute: RegisterRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   SavedPropertiesRoute: SavedPropertiesRoute,
   SearchRoute: SearchRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
