@@ -1,86 +1,40 @@
-import { createFileRoute, notFound } from "@tanstack/react-router";
-import { Mail, Phone, Star } from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { Mail, Phone } from "lucide-react";
 import { Link } from "@/components/compat/Link";
 import { PropertyCard } from "@/components/PropertyCard";
-import { getAgencyForAgent, getAgentById, getPropertiesForAgent } from "@/data/marketplace";
+import { fetchAgencyById, fetchAgentBySlug, fetchPropertiesByAgent } from "@/lib/directory-service";
 
 export const Route = createFileRoute("/agents/$id")({
-  head: ({ params }) => {
-    const agent = getAgentById(params.id);
-    if (!agent) return { meta: [{ title: "Agent" }] };
-    const agency = getAgencyForAgent(agent.id);
-    const path = `/agents/${params.id}`;
-    const description = agent.bio?.slice(0, 155) ?? `${agent.name} — ${agent.title}`;
-    return {
-      meta: [
-        { title: `${agent.name} | Agent | Nestoria` },
-        { name: "description", content: description },
-        { property: "og:title", content: `${agent.name} — ${agent.title}` },
-        { property: "og:description", content: description },
-        { property: "og:type", content: "profile" },
-        { property: "og:url", content: path },
-        { property: "og:image", content: agent.image },
-        { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:image", content: agent.image },
-      ],
-      links: [{ rel: "canonical", href: path }],
-      scripts: [
-        {
-          type: "application/ld+json",
-          children: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "RealEstateAgent",
-            name: agent.name,
-            jobTitle: agent.title,
-            description: agent.bio,
-            url: path,
-            image: agent.image,
-            telephone: agent.phone,
-            email: agent.email,
-            knowsAbout: agent.specialities,
-            worksFor: agency
-              ? {
-                  "@type": "RealEstateAgent",
-                  name: agency.name,
-                  url: `/agencies/${agency.id}`,
-                }
-              : undefined,
-            areaServed: agency
-              ? { "@type": "Place", name: `${agency.suburb}, ${agency.state}, Australia` }
-              : { "@type": "Country", name: "Australia" },
-            aggregateRating: {
-              "@type": "AggregateRating",
-              ratingValue: agent.rating,
-              bestRating: 5,
-              worstRating: 1,
-              reviewCount: agent.soldLastYear,
-            },
-            makesOffer: {
-              "@type": "Offer",
-              description: `${agent.activeListings} active listings, ${agent.soldLastYear} properties sold in the last year.`,
-            },
-          }),
-        },
-      ],
-    };
-  },
-  loader: ({ params }) => {
-    const agent = getAgentById(params.id);
-    if (!agent) throw notFound();
-    return { agent };
-  },
+  head: ({ params }) => ({
+    meta: [{ title: "Agent | Nestoria" }],
+    links: [{ rel: "canonical", href: `/agents/${params.id}` }],
+  }),
   component: AgentPage,
-  notFoundComponent: () => (
-    <div className="mx-auto max-w-3xl px-4 py-24 text-center">
-      <h1 className="text-3xl font-bold text-slate-950">Agent not found</h1>
-    </div>
-  ),
 });
 
 function AgentPage() {
-  const { agent } = Route.useLoaderData();
-  const agency = getAgencyForAgent(agent.id);
-  const listings = getPropertiesForAgent(agent.id);
+  const { id } = Route.useParams();
+  const { data: agent, isLoading } = useQuery({ queryKey: ["agent", id], queryFn: () => fetchAgentBySlug(id) });
+  const { data: agency } = useQuery({
+    queryKey: ["agency-by-id", agent?.agencyId],
+    queryFn: () => (agent?.agencyId ? fetchAgencyById(agent.agencyId) : Promise.resolve(null)),
+    enabled: !!agent?.agencyId,
+  });
+  const { data: listings = [] } = useQuery({
+    queryKey: ["properties-by-agent", agent?.id],
+    queryFn: () => (agent ? fetchPropertiesByAgent(agent.id) : Promise.resolve([])),
+    enabled: !!agent,
+  });
+
+  if (isLoading) return <div className="mx-auto max-w-3xl px-4 py-24 text-center text-slate-500">Loading…</div>;
+  if (!agent) {
+    return (
+      <div className="mx-auto max-w-3xl px-4 py-24 text-center">
+        <h1 className="text-3xl font-bold text-slate-950">Agent not found</h1>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
@@ -89,34 +43,33 @@ function AgentPage() {
           <img src={agent.image} alt={agent.name} className="size-32 rounded-lg object-cover" />
           <div className="flex-1">
             <h1 className="text-3xl font-bold text-slate-950">{agent.name}</h1>
-            <p className="mt-1 text-slate-600">{agent.title}</p>
+            {agent.title && <p className="mt-1 text-slate-600">{agent.title}</p>}
             {agency && (
-              <Link href={`/agencies/${agency.id}`} className="mt-1 block font-semibold text-emerald-800 hover:text-emerald-900">
+              <Link href={`/agencies/${agency.slug}`} className="mt-1 block font-semibold text-emerald-800 hover:text-emerald-900">
                 {agency.name}
               </Link>
             )}
-            <div className="mt-3 flex flex-wrap items-center gap-4 text-sm">
-              <span className="flex items-center gap-1.5 font-semibold text-slate-700">
-                <Star size={16} className="fill-amber-400 text-amber-400" aria-hidden="true" />
-                {agent.rating} rating
-              </span>
-              <span className="text-slate-600">{agent.activeListings} active listings</span>
-              <span className="text-slate-600">{agent.soldLastYear} sold last year</span>
-            </div>
+            {agent.yearsExperience != null && (
+              <p className="mt-3 text-sm text-slate-600">{agent.yearsExperience} years experience</p>
+            )}
             <div className="mt-4 flex flex-wrap gap-2">
-              <a href={`tel:${agent.phone}`} className="flex items-center gap-2 rounded-md border border-slate-200 px-4 py-2 text-sm font-bold text-slate-700 hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-800">
-                <Phone size={16} /> {agent.phone}
-              </a>
-              <a href={`mailto:${agent.email}`} className="flex items-center gap-2 rounded-md bg-slate-950 px-4 py-2 text-sm font-bold text-white hover:bg-emerald-800">
-                <Mail size={16} /> Email
-              </a>
+              {agent.phone && (
+                <a href={`tel:${agent.phone}`} className="flex items-center gap-2 rounded-md border border-slate-200 px-4 py-2 text-sm font-bold text-slate-700 hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-800">
+                  <Phone size={16} /> {agent.phone}
+                </a>
+              )}
+              {agent.email && (
+                <a href={`mailto:${agent.email}`} className="flex items-center gap-2 rounded-md bg-slate-950 px-4 py-2 text-sm font-bold text-white hover:bg-emerald-800">
+                  <Mail size={16} /> Email
+                </a>
+              )}
             </div>
           </div>
         </div>
-        <p className="mt-6 leading-7 text-slate-700">{agent.bio}</p>
-        {agent.specialities?.length > 0 && (
+        {agent.bio && <p className="mt-6 leading-7 text-slate-700">{agent.bio}</p>}
+        {agent.specialties.length > 0 && (
           <div className="mt-4 flex flex-wrap gap-2">
-            {agent.specialities.map((s: string) => (
+            {agent.specialties.map((s) => (
               <span key={s} className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-800">{s}</span>
             ))}
           </div>

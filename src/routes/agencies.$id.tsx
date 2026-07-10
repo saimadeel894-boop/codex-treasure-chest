@@ -1,31 +1,44 @@
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { Mail, MapPin, Phone } from "lucide-react";
-import { AgentCard } from "@/components/AgentCard";
 import { PropertyCard } from "@/components/PropertyCard";
-import { agents, getAgencyById, getPropertiesForAgency } from "@/data/marketplace";
+import { Link } from "@/components/compat/Link";
+import {
+  fetchAgencyBySlug,
+  fetchAgentsForAgency,
+  fetchPropertiesByAgency,
+} from "@/lib/directory-service";
 
 export const Route = createFileRoute("/agencies/$id")({
-  head: ({ params }) => {
-    const a = getAgencyById(params.id);
-    return { meta: [{ title: a ? `${a.name} | Agency | Nestoria` : "Agency" }] };
-  },
-  loader: ({ params }) => {
-    const agency = getAgencyById(params.id);
-    if (!agency) throw notFound();
-    return { agency };
-  },
+  head: ({ params }) => ({
+    meta: [{ title: "Agency | Nestoria" }],
+    links: [{ rel: "canonical", href: `/agencies/${params.id}` }],
+  }),
   component: AgencyPage,
-  notFoundComponent: () => (
-    <div className="mx-auto max-w-3xl px-4 py-24 text-center">
-      <h1 className="text-3xl font-bold text-slate-950">Agency not found</h1>
-    </div>
-  ),
 });
 
 function AgencyPage() {
-  const { agency } = Route.useLoaderData();
-  const teamAgents = agents.filter((a) => a.agencyId === agency.id);
-  const listings = getPropertiesForAgency(agency.id);
+  const { id } = Route.useParams();
+  const { data: agency, isLoading } = useQuery({ queryKey: ["agency", id], queryFn: () => fetchAgencyBySlug(id) });
+  const { data: team = [] } = useQuery({
+    queryKey: ["agency-team", agency?.id],
+    queryFn: () => (agency ? fetchAgentsForAgency(agency.id) : Promise.resolve([])),
+    enabled: !!agency,
+  });
+  const { data: listings = [] } = useQuery({
+    queryKey: ["agency-listings", agency?.id],
+    queryFn: () => (agency ? fetchPropertiesByAgency(agency.id) : Promise.resolve([])),
+    enabled: !!agency,
+  });
+
+  if (isLoading) return <div className="mx-auto max-w-3xl px-4 py-24 text-center text-slate-500">Loading…</div>;
+  if (!agency) {
+    return (
+      <div className="mx-auto max-w-3xl px-4 py-24 text-center">
+        <h1 className="text-3xl font-bold text-slate-950">Agency not found</h1>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -44,29 +57,41 @@ function AgencyPage() {
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
           <div>
-            <p className="leading-7 text-slate-700">{agency.description}</p>
+            {agency.description && <p className="leading-7 text-slate-700">{agency.description}</p>}
             <div className="mt-6 grid grid-cols-3 gap-4">
-              <Stat value={agency.stats.listings} label="Listings" />
-              <Stat value={agency.stats.agents} label="Agents" />
-              <Stat value={agency.stats.years} label="Years" />
+              <Stat value={listings.length} label="Listings" />
+              <Stat value={team.length} label="Agents" />
+              <Stat value={new Date().getFullYear() - 2010} label="Years" />
             </div>
           </div>
           <div className="rounded-lg border border-slate-200 bg-white p-5">
             <h2 className="font-bold text-slate-950">Contact</h2>
-            <a href={`tel:${agency.phone}`} className="mt-3 flex items-center gap-2 text-slate-700 hover:text-emerald-800">
-              <Phone size={16} /> {agency.phone}
-            </a>
-            <a href={`mailto:${agency.email}`} className="mt-2 flex items-center gap-2 text-slate-700 hover:text-emerald-800">
-              <Mail size={16} /> {agency.email}
-            </a>
+            {agency.phone && (
+              <a href={`tel:${agency.phone}`} className="mt-3 flex items-center gap-2 text-slate-700 hover:text-emerald-800">
+                <Phone size={16} /> {agency.phone}
+              </a>
+            )}
+            {agency.email && (
+              <a href={`mailto:${agency.email}`} className="mt-2 flex items-center gap-2 text-slate-700 hover:text-emerald-800">
+                <Mail size={16} /> {agency.email}
+              </a>
+            )}
           </div>
         </div>
 
-        {teamAgents.length > 0 && (
+        {team.length > 0 && (
           <section className="mt-12">
             <h2 className="text-2xl font-bold text-slate-950">Our team</h2>
             <div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-              {teamAgents.map((a) => <AgentCard key={a.id} agent={a} />)}
+              {team.map((a) => (
+                <Link key={a.id} href={`/agents/${a.slug}`} className="group flex gap-4 rounded-lg border border-slate-200 bg-white p-4 transition hover:border-emerald-300 hover:shadow-md">
+                  <img src={a.image} alt={a.name} className="size-16 rounded-full object-cover" />
+                  <div>
+                    <p className="font-bold text-slate-950 group-hover:text-emerald-800">{a.name}</p>
+                    {a.title && <p className="text-sm text-slate-600">{a.title}</p>}
+                  </div>
+                </Link>
+              ))}
             </div>
           </section>
         )}
