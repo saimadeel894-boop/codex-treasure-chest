@@ -1,4 +1,5 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { Bath, BedDouble, Car, CheckCircle2, MapPin, Quote, Ruler, Star } from "lucide-react";
 import { ContactAgentForm } from "@/components/ContactAgentForm";
 import { ImageGallery } from "@/components/ImageGallery";
@@ -8,8 +9,9 @@ import {
   getAgencyForProperty,
   getAgentForProperty,
   getPropertyById,
-  properties,
+  properties as mockProperties,
 } from "@/data/marketplace";
+import { fetchPropertyById, fetchPublishedProperties } from "@/lib/property-service";
 
 type PropertyTestimonial = {
   author: string;
@@ -221,8 +223,9 @@ export const Route = createFileRoute("/properties/$id")({
       ],
     };
   },
-  loader: ({ params }) => {
-    const property = getPropertyById(params.id);
+  loader: async ({ params }) => {
+    const dbProperty = await fetchPropertyById(params.id).catch(() => null);
+    const property = dbProperty ?? getPropertyById(params.id);
     if (!property) throw notFound();
     return { property };
   },
