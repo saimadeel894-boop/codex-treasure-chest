@@ -67,7 +67,7 @@ function MyListingsPage() {
         {!ready ? (
           <PropertyCardSkeletonGrid count={3} />
         ) : mine.length === 0 ? (
-          <div className="rounded-3xl border border-dashed border-border/70 bg-surface p-16 text-center">
+          <div className="rounded-3xl border border-dashed border-border/70 bg-surface p-8 text-center sm:p-12 md:p-16">
             <p className="text-eyebrow text-primary">Empty portfolio</p>
             <h2 className="mt-2 font-serif text-h3 text-charcoal">No listings yet</h2>
             <p className="mx-auto mt-3 max-w-md text-caption text-muted-foreground">

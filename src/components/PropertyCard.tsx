@@ -89,20 +89,20 @@ export function PropertyCard({ property, compact = false }: PropertyCardProps) {
           </span>
         </p>
 
-        <div className="mt-5 grid grid-cols-4 gap-2 border-t border-border/70 pt-4 text-caption text-charcoal-soft">
-          <span className="flex items-center gap-1.5">
-            <BedDouble size={16} className="text-primary" aria-hidden="true" />
-            {property.bedrooms}
+        <div className="mt-5 grid grid-cols-4 gap-1.5 border-t border-border/70 pt-4 text-caption text-charcoal-soft sm:gap-2">
+          <span className="flex min-w-0 items-center gap-1 sm:gap-1.5">
+            <BedDouble size={16} className="shrink-0 text-primary" aria-hidden="true" />
+            <span className="truncate">{property.bedrooms}</span>
           </span>
-          <span className="flex items-center gap-1.5">
-            <Bath size={16} className="text-primary" aria-hidden="true" />
-            {property.bathrooms}
+          <span className="flex min-w-0 items-center gap-1 sm:gap-1.5">
+            <Bath size={16} className="shrink-0 text-primary" aria-hidden="true" />
+            <span className="truncate">{property.bathrooms}</span>
           </span>
-          <span className="flex items-center gap-1.5">
-            <Car size={16} className="text-primary" aria-hidden="true" />
-            {property.parking}
+          <span className="flex min-w-0 items-center gap-1 sm:gap-1.5">
+            <Car size={16} className="shrink-0 text-primary" aria-hidden="true" />
+            <span className="truncate">{property.parking}</span>
           </span>
-          <span className="truncate text-right text-caption text-muted-foreground">
+          <span className="min-w-0 truncate text-right text-caption text-muted-foreground">
             {property.landSize}
           </span>
         </div>

@@ -32,26 +32,26 @@ export function QuickViewModal({ property, open, onClose }: QuickViewModalProps)
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-charcoal/70 px-4 py-8 backdrop-blur-sm animate-in fade-in"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-charcoal/70 px-3 py-4 backdrop-blur-sm animate-in fade-in sm:px-4 sm:py-8"
       role="dialog"
       aria-modal="true"
       aria-labelledby={`quickview-${property.id}`}
       onClick={onClose}
     >
       <div
-        className="relative flex max-h-full w-full max-w-4xl flex-col overflow-hidden rounded-3xl bg-background shadow-luxury md:flex-row"
+        className="relative flex max-h-[calc(100dvh-2rem)] w-full max-w-4xl flex-col overflow-hidden rounded-2xl bg-background shadow-luxury sm:rounded-3xl md:max-h-[calc(100dvh-4rem)] md:flex-row"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-4 top-4 z-10 flex size-10 items-center justify-center rounded-full bg-background/95 text-charcoal shadow-soft transition hover:bg-primary hover:text-primary-foreground"
+          className="absolute right-3 top-3 z-10 flex size-9 items-center justify-center rounded-full bg-background/95 text-charcoal shadow-soft transition hover:bg-primary hover:text-primary-foreground sm:right-4 sm:top-4 sm:size-10"
           aria-label="Close quick view"
         >
           <X size={18} />
         </button>
 
-        <div className="relative h-64 shrink-0 overflow-hidden bg-muted md:h-auto md:w-[55%]">
+        <div className="relative h-48 shrink-0 overflow-hidden bg-muted sm:h-64 md:h-auto md:w-[55%]">
           <Image
             src={property.images[0]}
             alt={property.title}
@@ -73,39 +73,39 @@ export function QuickViewModal({ property, open, onClose }: QuickViewModalProps)
           </div>
         </div>
 
-        <div className="flex flex-1 flex-col overflow-y-auto p-6 md:p-8">
+        <div className="flex flex-1 flex-col overflow-y-auto p-5 sm:p-6 md:p-8">
           <p className="text-eyebrow text-primary">
             {property.propertyType}
           </p>
           <h2
             id={`quickview-${property.id}`}
-            className="mt-2 font-serif text-h3 text-charcoal text-balance"
+            className="mt-2 font-serif text-2xl leading-tight text-charcoal text-balance sm:text-h3"
           >
             {property.title}
           </h2>
           <p className="mt-2 flex items-center gap-2 text-caption text-muted-foreground">
-            <MapPin size={15} className="text-primary" aria-hidden="true" />
-            {property.suburb}, {property.state} {property.postcode}
+            <MapPin size={15} className="shrink-0 text-primary" aria-hidden="true" />
+            <span className="truncate">{property.suburb}, {property.state} {property.postcode}</span>
           </p>
 
-          <p className="mt-4 font-serif text-h2 text-charcoal">{property.priceLabel}</p>
+          <p className="mt-4 font-serif text-2xl text-charcoal sm:text-h2">{property.priceLabel}</p>
 
-          <div className="mt-5 grid grid-cols-4 gap-3 border-y border-border/70 py-4 text-caption text-charcoal-soft">
-            <span className="flex flex-col items-start gap-1">
-              <BedDouble size={16} className="text-primary" aria-hidden="true" />
-              <span>{property.bedrooms} beds</span>
+          <div className="mt-5 grid grid-cols-4 gap-2 border-y border-border/70 py-4 text-caption text-charcoal-soft sm:gap-3">
+            <span className="flex min-w-0 flex-col items-start gap-1">
+              <BedDouble size={16} className="shrink-0 text-primary" aria-hidden="true" />
+              <span className="truncate">{property.bedrooms} beds</span>
             </span>
-            <span className="flex flex-col items-start gap-1">
-              <Bath size={16} className="text-primary" aria-hidden="true" />
-              <span>{property.bathrooms} baths</span>
+            <span className="flex min-w-0 flex-col items-start gap-1">
+              <Bath size={16} className="shrink-0 text-primary" aria-hidden="true" />
+              <span className="truncate">{property.bathrooms} baths</span>
             </span>
-            <span className="flex flex-col items-start gap-1">
-              <Car size={16} className="text-primary" aria-hidden="true" />
-              <span>{property.parking} parking</span>
+            <span className="flex min-w-0 flex-col items-start gap-1">
+              <Car size={16} className="shrink-0 text-primary" aria-hidden="true" />
+              <span className="truncate">{property.parking} parking</span>
             </span>
-            <span className="flex flex-col items-start gap-1">
-              <Ruler size={16} className="text-primary" aria-hidden="true" />
-              <span className="text-eyebrow">{property.landSize}</span>
+            <span className="flex min-w-0 flex-col items-start gap-1">
+              <Ruler size={16} className="shrink-0 text-primary" aria-hidden="true" />
+              <span className="truncate text-eyebrow">{property.landSize}</span>
             </span>
           </div>
 

@@ -42,14 +42,14 @@ function AgencyPage() {
 
   return (
     <div>
-      <div className="relative h-64 sm:h-80">
+      <div className="relative min-h-[16rem] sm:min-h-80">
         <img src={agency.heroImage} alt={agency.name} className="absolute inset-0 h-full w-full object-cover" />
         <div className="absolute inset-0 bg-slate-950/60" />
-        <div className="relative mx-auto flex h-full max-w-7xl items-end px-4 pb-8 sm:px-6 lg:px-8">
-          <div className="text-white">
-            <p className="text-sm font-bold uppercase tracking-wider text-emerald-300">{agency.initials}</p>
-            <h1 className="mt-1 text-4xl font-bold">{agency.name}</h1>
-            <p className="mt-2 flex items-center gap-2"><MapPin size={16} /> {agency.suburb}, {agency.state}</p>
+        <div className="relative mx-auto flex min-h-[16rem] max-w-7xl items-end px-4 py-8 sm:min-h-80 sm:px-6 lg:px-8">
+          <div className="min-w-0 text-white">
+            <p className="text-xs font-bold uppercase tracking-wider text-emerald-300 sm:text-sm">{agency.initials}</p>
+            <h1 className="mt-1 text-2xl font-bold sm:text-3xl md:text-4xl">{agency.name}</h1>
+            <p className="mt-2 flex items-center gap-2 text-sm sm:text-base"><MapPin size={16} className="shrink-0" /> <span className="truncate">{agency.suburb}, {agency.state}</span></p>
           </div>
         </div>
       </div>
@@ -58,7 +58,7 @@ function AgencyPage() {
         <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
           <div>
             {agency.description && <p className="leading-7 text-slate-700">{agency.description}</p>}
-            <div className="mt-6 grid grid-cols-3 gap-4">
+            <div className="mt-6 grid grid-cols-3 gap-2 sm:gap-4">
               <Stat value={listings.length} label="Listings" />
               <Stat value={team.length} label="Agents" />
               <Stat value={new Date().getFullYear() - 2010} label="Years" />

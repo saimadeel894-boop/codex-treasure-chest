@@ -310,18 +310,18 @@ function Home() {
             <SearchComponent />
           </div>
 
-          <div className="mt-14 grid w-full max-w-3xl grid-cols-3 gap-4 text-background/90 sm:gap-6">
-            <div>
-              <p className="font-serif text-h3 text-background">38k+</p>
-              <p className="text-[10px] uppercase tracking-widest text-background/70 sm:text-xs">Listings</p>
+          <div className="mt-10 grid w-full max-w-3xl grid-cols-3 gap-3 text-background/90 sm:mt-14 sm:gap-6">
+            <div className="min-w-0">
+              <p className="font-serif text-2xl leading-tight text-background sm:text-3xl md:text-h3">38k+</p>
+              <p className="mt-1 text-[9px] uppercase tracking-widest text-background/70 sm:text-xs">Listings</p>
             </div>
-            <div>
-              <p className="font-serif text-h3 text-background">720+</p>
-              <p className="text-[10px] uppercase tracking-widest text-background/70 sm:text-xs">Trusted agents</p>
+            <div className="min-w-0">
+              <p className="font-serif text-2xl leading-tight text-background sm:text-3xl md:text-h3">720+</p>
+              <p className="mt-1 text-[9px] uppercase tracking-widest text-background/70 sm:text-xs">Trusted agents</p>
             </div>
-            <div>
-              <p className="font-serif text-h3 text-background">4.9★</p>
-              <p className="text-[10px] uppercase tracking-widest text-background/70 sm:text-xs">Client rating</p>
+            <div className="min-w-0">
+              <p className="font-serif text-2xl leading-tight text-background sm:text-3xl md:text-h3">4.9★</p>
+              <p className="mt-1 text-[9px] uppercase tracking-widest text-background/70 sm:text-xs">Client rating</p>
             </div>
           </div>
         </div>
