@@ -41,14 +41,17 @@ export function Footer() {
       />
       <div className="relative mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-6 lg:grid-cols-[1.3fr_2fr] lg:px-8">
         <div>
-          <Link href="/" className="flex items-center gap-3" aria-label="Real Estate Marketplace Australia home">
-            <span className="flex size-11 items-center justify-center rounded-full bg-primary text-primary-foreground">
-              <span className="font-serif text-tile leading-none">R</span>
+          <Link href="/" className="group flex items-center gap-3" aria-label="Real Estate Marketplace Australia home">
+            <span className="relative flex size-12 items-center justify-center rounded-sm border border-primary/50 bg-gradient-to-br from-primary/15 to-transparent text-primary transition-all duration-300 group-hover:border-primary">
+              <span className="font-serif text-h3 italic leading-none tracking-tight">R</span>
+              <span className="absolute -bottom-0.5 -right-0.5 size-1.5 rounded-full bg-primary" aria-hidden="true" />
             </span>
             <span>
-              <span className="block font-serif text-tile leading-none">Real Estate Marketplace</span>
-              <span className="text-eyebrow text-primary">
-                Australia
+              <span className="block font-serif text-tile leading-none tracking-tight">
+                Real <span className="italic text-primary">Estate</span> Marketplace
+              </span>
+              <span className="mt-1 block text-[0.65rem] font-medium uppercase tracking-[0.28em] text-background/60">
+                — Australia
               </span>
             </span>
           </Link>
