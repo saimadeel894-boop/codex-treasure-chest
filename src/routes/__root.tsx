@@ -261,6 +261,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
+        <VercelFallbackRedirect />
         <Navbar />
         <BackToHome />
         <main className="flex-1">
@@ -270,4 +271,23 @@ function RootComponent() {
       </AuthProvider>
     </QueryClientProvider>
   );
+}
+
+function VercelFallbackRedirect() {
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const { hostname, pathname, search, hash } = window.location;
+    const isOldVercelHost =
+      hostname === "codex-treasure-chest.vercel.app" ||
+      hostname.endsWith("--codex-treasure-chest.vercel.app");
+
+    if (!isOldVercelHost) return;
+
+    window.location.replace(
+      `https://real-estate-marketplace-australia.lovable.app${pathname}${search}${hash}`,
+    );
+  }, []);
+
+  return null;
 }
