@@ -1,6 +1,11 @@
 {
   "redirects": [
     {
+      "source": "/",
+      "destination": "https://real-estate-marketplace-australia.lovable.app/",
+      "permanent": true
+    },
+    {
       "source": "/:path*",
       "destination": "https://real-estate-marketplace-australia.lovable.app/:path*",
       "permanent": true

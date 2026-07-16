@@ -16,6 +16,23 @@ import { Footer } from "@/components/Footer";
 import { BackToHome } from "@/components/BackToHome";
 import { AuthProvider } from "@/hooks/use-auth";
 
+const LIVE_SITE_URL = "https://real-estate-marketplace-australia.lovable.app";
+
+function isVercelHost(hostname: string) {
+  return hostname.endsWith(".vercel.app");
+}
+
+const vercelRedirectScript = `
+(() => {
+  try {
+    const liveSiteUrl = ${JSON.stringify(LIVE_SITE_URL)};
+    const { hostname, pathname, search, hash } = window.location;
+    if (!hostname.endsWith(".vercel.app")) return;
+    window.location.replace(liveSiteUrl + pathname + search + hash);
+  } catch (_) {}
+})();
+`;
+
 
 
 function NotFoundComponent() {
@@ -113,6 +130,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
     scripts: [
+      {
+        children: vercelRedirectScript,
+      },
       {
         type: "application/ld+json",
         children: JSON.stringify({
@@ -278,15 +298,9 @@ function VercelFallbackRedirect() {
     if (typeof window === "undefined") return;
 
     const { hostname, pathname, search, hash } = window.location;
-    const isOldVercelHost =
-      hostname === "codex-treasure-chest.vercel.app" ||
-      hostname.endsWith("--codex-treasure-chest.vercel.app");
+    if (!isVercelHost(hostname)) return;
 
-    if (!isOldVercelHost) return;
-
-    window.location.replace(
-      `https://real-estate-marketplace-australia.lovable.app${pathname}${search}${hash}`,
-    );
+    window.location.replace(`${LIVE_SITE_URL}${pathname}${search}${hash}`);
   }, []);
 
   return null;
